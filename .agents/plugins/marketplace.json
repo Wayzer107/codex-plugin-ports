@@ -1,0 +1,32 @@
+{
+  "name": "codex-plugin-ports",
+  "interface": {
+    "displayName": "Codex Plugin Ports"
+  },
+  "plugins": [
+    {
+      "name": "codex-setup",
+      "source": {
+        "source": "local",
+        "path": "./plugins/codex-setup"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "agents-md-management",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agents-md-management"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "agents-md-management",
+  "version": "0.1.0",
+  "description": "Audit Codex project instructions and capture durable session learnings in the appropriate AGENTS.md file.",
+  "author": {
+    "name": "Local Codex adaptation"
+  },
+  "repository": "https://github.com/Wayzer107/codex-plugin-ports",
+  "license": "Apache-2.0",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "AGENTS.md Management",
+        "shortDescription": "Audit and update AGENTS.md",
+        "longDescription": "Audit Codex project instructions and capture durable session learnings in the appropriate AGENTS.md file.",
+        "developerName": "Local Codex adaptation",
+        "category": "Developer Tools",
+        "defaultPrompt": [
+          "Audit the AGENTS.md files in this repository.",
+          "Use $agents-md-management:revise-agents-md to capture durable learnings from this session."
+        ]
+      }
+    }
+  }
+}

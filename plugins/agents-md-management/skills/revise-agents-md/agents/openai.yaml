@@ -1,0 +1,6 @@
+interface:
+  display_name: "Revise AGENTS.md"
+  short_description: "Capture durable session learnings"
+  default_prompt: "Capture durable learnings from this session in the appropriate AGENTS.md."
+policy:
+  allow_implicit_invocation: false
