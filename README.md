@@ -31,7 +31,7 @@ Install [Project LSP](plugins/project-lsp/README.md) to let Codex detect source 
 codex plugin add 'project-lsp@codex-plugin-ports'
 ~~~
 
-Use `$project-lsp:project-lsp` for an explicit setup or when you want to preview changes. The checker writes the selected packages and activation settings inside the project. Start a new thread if the current one does not yet expose the new tools.
+Use `$project-lsp:project-lsp` for an explicit setup or when you want to preview changes. The checker writes GitHub source references and activation settings inside the project, and Codex handles package downloads. Start a new thread if the current one does not yet expose the new tools.
 
 ## Language server plugins
 

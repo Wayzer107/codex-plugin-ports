@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "project-lsp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Detect project languages and activate the marketplace language-server plugins for that Git repository.",
   "author": {
     "name": "Codex Plugin Ports"

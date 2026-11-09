@@ -2,12 +2,11 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { lstat, mkdir, mkdtemp, readFile, readdir, realpath, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { dirname, join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 const helper = fileURLToPath(new URL('../plugins/project-lsp/skills/project-lsp/scripts/project-lsp.mjs', import.meta.url));
-const sourcePlugins = fileURLToPath(new URL('../plugins/', import.meta.url));
 const catalogPath = '.agents/plugins/marketplace.json';
 const configPath = '.codex/config.toml';
 
@@ -67,42 +66,23 @@ async function catalog(root) {
   return JSON.parse(await readFile(join(root, catalogPath), 'utf8'));
 }
 
-async function filesUnder(directory) {
-  const files = await readdir(directory, { recursive: true, withFileTypes: true });
-  return files.filter(file => !file.isDirectory())
-    .map(file => relative(directory, join(file.parentPath, file.name)))
-    .sort();
-}
-
-async function checkPayload(root, marketplace, name) {
+function checkSource(marketplace, name) {
   const entry = marketplace.plugins.find(plugin => plugin.name === name);
   assert.ok(entry, `Missing marketplace entry for ${name}`);
-  assert.equal(entry.source.source, 'local');
-  assert.equal(isAbsolute(entry.source.path), false);
-  const payload = resolve(root, entry.source.path);
-  const payloadLocation = relative(join(root, '.codex', 'lsp-plugins'), payload);
-  assert.ok(payloadLocation && !isAbsolute(payloadLocation) && payloadLocation.split(sep)[0] !== '..');
-
-  const source = join(sourcePlugins, name);
-  const files = await filesUnder(source);
-  assert.deepEqual(await filesUnder(payload), files);
-  for (const file of files) {
-    const contents = await readFile(join(payload, file), 'utf8');
-    const original = await readFile(join(source, file), 'utf8');
-    assert.equal(contents.replace(/\r\n/g, '\n'), original.replace(/\r\n/g, '\n'), `${name}/${file}`);
-  }
-  return payload;
+  assert.equal(entry.source.source, 'git-subdir');
+  assert.equal(entry.source.url, 'https://github.com/Wayzer107/codex-plugin-ports.git');
+  assert.equal(entry.source.path, './plugins/' + name);
+  assert.match(entry.source.sha, /^[0-9a-f]{40}$/);
 }
 
-function assertEnabled(config, name) {
-  const header = `[mcp_servers."project_lsp_${name.replace(/-/g, '_')}"]`;
+function assertEnabled(config, name, marketplace) {
+  const header = `[plugins."${name}@${marketplace}"]`;
   const lines = config.split(/\r?\n/);
   const index = lines.findIndex(line => line.trim() === header);
   assert.ok(index >= 0, `Missing config table ${header}`);
   const nextTable = lines.findIndex((line, lineIndex) => lineIndex > index && line.trimStart().startsWith('['));
   const settings = lines.slice(index + 1, nextTable < 0 ? undefined : nextTable);
-  assert.ok(settings.includes('command = "node"'), `${header} must launch the packaged MCP bridge`);
-  assert.ok(settings.some(line => line.startsWith('cwd = ') && line.includes('lsp-plugins')));
+  assert.ok(settings.includes('enabled = true'), `${header} must be enabled`);
 }
 
 function assertRejected(result, diagnostic) {
@@ -142,7 +122,7 @@ test('check mode combines a new file hint with project detection without writing
   await assert.rejects(lstat(join(repo.root, '.agents')), { code: 'ENOENT' });
 });
 
-test('copies an exact plugin payload and preserves existing project and user settings across repeat runs', async t => {
+test('pins the marketplace source and preserves existing project and user settings across repeat runs', async t => {
   const repo = await project(t);
   const unrelated = {
     name: 'manual-plugin',
@@ -166,12 +146,13 @@ test('copies an exact plugin payload and preserves existing project and user set
   assert.equal(marketplace.name, existingCatalog.name);
   assert.deepEqual(marketplace.interface, existingCatalog.interface);
   assert.deepEqual(marketplace.plugins.find(plugin => plugin.name === unrelated.name), unrelated);
-  await checkPayload(repo.root, marketplace, 'typescript-lsp');
+  checkSource(marketplace, 'typescript-lsp');
+  await assert.rejects(lstat(join(repo.root, '.codex', 'lsp-plugins')), { code: 'ENOENT' });
 
   const catalogBefore = await readFile(join(repo.root, catalogPath), 'utf8');
   const configBefore = await readFile(join(repo.root, configPath), 'utf8');
   assert.ok(configBefore.includes(projectConfig));
-  assertEnabled(configBefore, 'typescript-lsp');
+  assertEnabled(configBefore, 'typescript-lsp', marketplace.name);
 
   const repeat = repo.sync();
   assert.deepEqual(repeat.managed, ['typescript-lsp']);
@@ -182,14 +163,14 @@ test('copies an exact plugin payload and preserves existing project and user set
   assert.deepEqual(await readdir(join(repo.home, '.codex')), ['config.toml']);
 });
 
-test('drops stale managed entries when a tracked source file is removed and retains its payload', async t => {
+test('drops stale managed entries when a tracked source file is removed', async t => {
   const repo = await project(t);
   await put(repo.root, 'main.py', 'print(1)\n');
   await put(repo.root, 'index.ts', 'export const value = 1;\n');
   repo.git('add', '--', 'main.py', 'index.ts');
   assert.deepEqual([...repo.sync().managed].sort(), ['pyright-lsp', 'typescript-lsp']);
   const previous = await catalog(repo.root);
-  const payload = await checkPayload(repo.root, previous, 'pyright-lsp');
+  checkSource(previous, 'pyright-lsp');
 
   await rm(join(repo.root, 'main.py'));
   const report = repo.sync();
@@ -199,9 +180,8 @@ test('drops stale managed entries when a tracked source file is removed and reta
   const marketplace = await catalog(repo.root);
   assert.deepEqual(marketplace.plugins.map(plugin => plugin.name), ['typescript-lsp']);
   const config = await readFile(join(repo.root, configPath), 'utf8');
-  assert.ok(!config.includes('project_lsp_pyright_lsp'));
-  assertEnabled(config, 'typescript-lsp');
-  assert.equal(JSON.parse(await readFile(join(payload, 'plugin.json'), 'utf8')).name, 'pyright-lsp');
+  assert.ok(!config.includes(`pyright-lsp@${marketplace.name}`));
+  assertEnabled(config, 'typescript-lsp', marketplace.name);
 });
 
 test('rejects a directory outside a Git project', async t => {

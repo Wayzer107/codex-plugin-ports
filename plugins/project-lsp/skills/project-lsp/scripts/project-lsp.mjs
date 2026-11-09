@@ -3,17 +3,18 @@ import { createHash, randomUUID } from "node:crypto";
 import { lstat, mkdir, open, readFile, realpath, rename, unlink, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { parseArgs, promisify } from "node:util";
+import { refreshMarketplace } from "./refresh-marketplace.mjs";
 
 const exec = promisify(execFile);
-const bundle = JSON.parse(await readFile(new URL("../assets/ports.json", import.meta.url), "utf8"));
+const source = "https://github.com/Wayzer107/codex-plugin-ports.git";
+const revision = "0e3f181c68859f9ef3accfbccd320d2e01f088b5";
 const begin = "# >>> codex-project-lsp >>>";
 const end = "# <<< codex-project-lsp <<<";
 const excluded = new Set([".agents", ".codex", ".git", ".venv", "__pycache__", "build", "dist", "node_modules", "target", "third_party", "vendor"]);
-const ports = new Map(Object.entries(bundle.plugins));
+const ports = new Map(Object.entries(JSON.parse(await readFile(new URL("../assets/languages.json", import.meta.url), "utf8"))));
 const languages = new Map();
-for (const [name, files] of ports) {
-  const profile = JSON.parse(files["server/profile.json"]);
-  for (const extension of Object.keys(profile.extensionToLanguage)) {
+for (const [name, extensions] of ports) {
+  for (const extension of extensions) {
     const matches = languages.get(extension) ?? [];
     languages.set(extension, [...matches, name]);
   }
@@ -116,25 +117,24 @@ function unpackConfig(original) {
   };
 }
 
-function configuration(original, parts, registrations) {
-  if (!registrations.length) {
+function configuration(original, parts, ids) {
+  if (!ids.length) {
     if (!parts.managed) return original;
     return parts.before + parts.after;
   }
   const newline = original?.includes("\r\n") ? "\r\n" : "\n";
   const base = parts.before && !parts.before.endsWith("\n") ? parts.before + newline : parts.before;
-  const lines = registrations.flatMap(({ name, cwd, command, args }) => [
-    '[mcp_servers.' + JSON.stringify(name) + ']',
-    "command = " + JSON.stringify(command),
-    "args = " + JSON.stringify(args),
-    "cwd = " + JSON.stringify(cwd),
-    "",
-  ]);
+  const lines = ids.flatMap((id) => ['[plugins.' + JSON.stringify(id) + ']', "enabled = true", ""]);
   return base + [begin, ...lines, end, ""].join(newline) + parts.after;
 }
 
 function ourEntry(entry) {
-  return ports.has(entry.name) && entry.source?.source === "local" &&
+  if (!ports.has(entry.name)) return false;
+  if (entry.source?.source === "git-subdir") {
+    return entry.source.url === source && entry.source.path === "./plugins/" + entry.name;
+  }
+  // Recognize entries from the first release so an upgrade can replace them.
+  return entry.source?.source === "local" &&
     typeof entry.source.path === "string" &&
     entry.source.path.startsWith("./.codex/lsp-plugins/" + entry.name + "/") &&
     /^[0-9a-f]{16}$/.test(basename(entry.source.path)) &&
@@ -158,10 +158,8 @@ async function plan(root, detected, codex, agents) {
   const manualEntries = catalog.plugins.filter((entry) => !ourEntry(entry));
   const manualNames = new Set(manualEntries.map((entry) => entry.name));
   const idFor = (name) => name + "@" + catalog.name;
-  const serverFor = (name) => "project_lsp_" + name.replace(/-/g, "_");
-  const manuallyConfigured = (name) => outside.includes(idFor(name)) || outside.includes(serverFor(name));
-  const packages = [];
-  const registrations = [];
+  const manuallyConfigured = (name) => outside.includes(idFor(name)) ||
+    outside.includes("project_lsp_" + name.replace(/-/g, "_"));
   const managed = [];
   const skipped = [];
   const entries = [...manualEntries, ...catalog.plugins.filter((entry) =>
@@ -172,26 +170,19 @@ async function plan(root, detected, codex, agents) {
       skipped.push(name);
       continue;
     }
-    const files = { ...bundle.common, ...ports.get(name) };
-    const folder = ".codex/lsp-plugins/" + name + "/" + digest(JSON.stringify(files));
     entries.push({
       name,
-      source: { source: "local", path: "./" + folder },
+      source: { source: "git-subdir", url: source, path: "./plugins/" + name, sha: revision },
       policy: { installation: "AVAILABLE", authentication: "ON_INSTALL" },
       category: "Developer Tools",
     });
-    packages.push({ folder, files });
     if (manuallyConfigured(name)) skipped.push(name);
-    else {
-      const [launch] = Object.values(JSON.parse(files["mcp.json"]).mcpServers);
-      registrations.push({ name: serverFor(name), cwd: join(root, folder), command: launch.command, args: launch.args });
-      managed.push(name);
-    }
+    else managed.push(name);
   }
 
   // An inline TOML table cannot be extended with separate table headers.
-  if (managed.length && /^\s*["']?mcp_servers["']?\s*=\s*\{/m.test(outside)) {
-    throw new Error("The existing inline mcp_servers table must be expanded before project LSP entries can be added.");
+  if (managed.length && /^\s*["']?plugins["']?\s*=\s*\{/m.test(outside)) {
+    throw new Error("The existing inline plugins table must be expanded before project LSP entries can be added.");
   }
 
   const catalogChanged = JSON.stringify(entries) !== JSON.stringify(catalog.plugins);
@@ -199,30 +190,11 @@ async function plan(root, detected, codex, agents) {
   const nextCatalog = catalogChanged
     ? (JSON.stringify({ ...catalog, plugins: entries }, null, 2) + "\n").replace(/\n/g, newline)
     : existingCatalog;
-  const nextConfig = configuration(existingConfig, parts, registrations);
-  let payloadChanged = false;
-  for (const pkg of packages) {
-    for (const [file, contents] of Object.entries(pkg.files)) {
-      const path = join(root, pkg.folder, file);
-      await directory(root, relative(root, dirname(path)).split(sep).join("/"));
-      const old = await textFile(path);
-      if (old === null) payloadChanged = true;
-      else if (old.replace(/\r\n/g, "\n") !== contents.replace(/\r\n/g, "\n")) {
-        throw new Error("A generated plugin file has been modified: " + relative(root, path));
-      }
-    }
-  }
+  const nextConfig = configuration(existingConfig, parts, managed.map(idFor));
   return {
     catalog: catalog.name, detected, managed, skipped,
-    changed: payloadChanged || nextCatalog !== existingCatalog || nextConfig !== existingConfig,
+    changed: nextCatalog !== existingCatalog || nextConfig !== existingConfig,
     async apply() {
-      for (const { folder, files } of packages) {
-        for (const [file, contents] of Object.entries(files)) {
-          const path = join(root, folder, file);
-          await directory(root, relative(root, dirname(path)).split(sep).join("/"), true);
-          if (await textFile(path) === null) await replace(path, null, contents);
-        }
-      }
       if (nextCatalog !== existingCatalog) {
         await directory(root, ".agents/plugins", true);
         await replace(catalogPath, existingCatalog, nextCatalog);
@@ -266,7 +238,7 @@ async function lock(codex) {
 }
 
 async function main() {
-  const { values } = parseArgs({ options: { cwd: { type: "string" }, file: { type: "string", multiple: true }, check: { type: "boolean" } } });
+  const { values } = parseArgs({ options: { cwd: { type: "string" }, file: { type: "string", multiple: true }, check: { type: "boolean" }, refresh: { type: "boolean" } } });
   const cwd = await realpath(resolve(values.cwd ?? process.cwd()));
   const root = await realpath((await git(cwd, "rev-parse", "--show-toplevel")).trim());
   if (!contained(root, cwd)) throw new Error("Git root is outside the requested project.");
@@ -285,7 +257,16 @@ async function main() {
     }
   }
   const { catalog, managed, skipped, changed } = result;
-  console.log(JSON.stringify({ project: root, catalog, detected, managed, skipped, changed, check: Boolean(values.check) }));
+  let refresh;
+  if (!values.check && values.refresh && managed.length) {
+    try {
+      await refreshMarketplace(root, catalog, managed);
+      refresh = { ready: true };
+    } catch (error) {
+      refresh = { ready: false, error: error.message };
+    }
+  }
+  console.log(JSON.stringify({ project: root, catalog, detected, managed, skipped, changed, check: Boolean(values.check), refresh }));
 }
 
 try {

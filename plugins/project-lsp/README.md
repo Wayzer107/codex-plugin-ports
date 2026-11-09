@@ -12,18 +12,17 @@ Codex can select the skill for source-code work. To run it explicitly, type `$pr
 
 ## Project files
 
-- `.codex/lsp-plugins/` holds the exact selected marketplace packages bundled with this version of the selector.
-- `.agents/plugins/marketplace.json` lists their local sources. Existing entries are preserved.
-- `.codex/config.toml` holds the managed MCP registrations. Existing settings take precedence over the selector when they configure the same plugin.
+- `.agents/plugins/marketplace.json` references the selected packages at a pinned GitHub commit. Existing entries are preserved.
+- `.codex/config.toml` holds project-only plugin enablement. Existing settings take precedence when they configure the same plugin.
 
-The selector runs offline and writes within the Git root. It registers the MCP entry points from the copied packages directly in project config. Run the checker again if you move the checkout, since those registrations contain absolute paths. The project must be trusted in Codex for the configuration to take effect. If new tools are missing in a running thread, open a fresh thread in that project. The LSP ports use the Node runtime and language-server executables already available on the Codex host's PATH.
+The selector writes project configuration within the Git root. With `--refresh`, it asks Codex to fetch the plugins into its normal cache. The project must be trusted in Codex for the configuration to take effect. If new tools are missing in a running thread, open a fresh thread in that project. The LSP ports use the Node runtime and language-server executables already available on the Codex host's PATH.
 
 ## Use from a checkout
 
 Run the checker directly from a checkout of this marketplace for a one-time project setup. Add `--check` to preview the detected ports and pending changes, or repeat `--file` to include new source paths.
 
 ~~~powershell
-node '<marketplace checkout>/plugins/project-lsp/skills/project-lsp/scripts/project-lsp.mjs' --cwd '<project directory>'
+node '<marketplace checkout>/plugins/project-lsp/skills/project-lsp/scripts/project-lsp.mjs' --cwd '<project directory>' --refresh
 ~~~
 
-Run the check again after the project changes languages. The checker removes its stale MCP registrations and retains their package files in the project for reuse.
+Run the check again after the project changes languages. The checker removes its stale project enablement entries. Upgrading from the first release replaces the managed MCP settings and leaves previously copied files available for manual cleanup.
