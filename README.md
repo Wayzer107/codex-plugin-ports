@@ -6,6 +6,7 @@ Codex plugins adapted from Anthropic's Claude plugins. Each plugin is independen
 | --- | --- |
 | [Codex Setup](plugins/codex-setup/README.md) | Read-only recommendations for hooks, MCP, skills, plugins, subagents, and repeatable workflows |
 | [AGENTS.md Management](plugins/agents-md-management/README.md) | Auditing project instructions and capturing durable session learnings |
+| [Project LSP](plugins/project-lsp/README.md) | Detecting source languages and enabling the matching LSP plugins in a Git project |
 
 ## Install from GitHub
 
@@ -21,6 +22,16 @@ codex plugin list --marketplace codex-plugin-ports
 For a local checkout, pass the checkout's absolute path to `codex plugin marketplace add` in place of the GitHub repository name.
 
 Start a new Codex conversation, type `$`, and select the installed skill.
+
+## Project-scoped LSP selection
+
+Install [Project LSP](plugins/project-lsp/README.md) to let Codex detect source languages during coding work and enable their marketplace packages inside the Git project.
+
+~~~powershell
+codex plugin add 'project-lsp@codex-plugin-ports'
+~~~
+
+Use `$project-lsp:project-lsp` for an explicit setup or when you want to preview changes. The checker writes the selected packages and activation settings inside the project. Start a new thread if the current one does not yet expose the new tools.
 
 ## Language server plugins
 

@@ -29,6 +29,18 @@
       "category": "Developer Tools"
     },
     {
+      "name": "project-lsp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/project-lsp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "clangd-lsp",
       "source": {
         "source": "local",

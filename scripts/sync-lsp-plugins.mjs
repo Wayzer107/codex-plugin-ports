@@ -11,6 +11,7 @@ const license = await readFile(join(root, "LICENSE"));
 const bridge = await readFile(join(root, "src/bridge.mjs"));
 const transport = await readFile(join(root, "src/lsp-client.mjs"));
 const mismatches = [];
+const bundledPorts = {};
 
 async function output(path, contents) {
   const target = join(root, path);
@@ -37,8 +38,13 @@ for (const profile of profiles) {
   const description = "Use " + server.command + " for " + language + " code navigation and diagnostics in Codex.";
   const shortDescription = language + " code intelligence";
   const extensions = Object.keys(server.extensionToLanguage).map((ext) => "`" + ext + "`").join(", ");
+  const portFiles = bundledPorts[plugin] = {};
+  async function portFile(path, contents) {
+    portFiles[path] = contents;
+    await output(directory + "/" + path, contents);
+  }
 
-  await output(directory + "/plugin.json", json({
+  await portFile("plugin.json", json({
     $schema: "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
     name: plugin,
     version: "0.1.0",
@@ -55,7 +61,7 @@ for (const profile of profiles) {
       defaultPrompt: "Use " + displayName + " to find definitions in this workspace.",
     } } },
   }));
-  await output(directory + "/mcp.json", json({
+  await portFile("mcp.json", json({
     $schema: "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
     mcpServers: {
       [server.name]: {
@@ -66,11 +72,11 @@ for (const profile of profiles) {
       },
     },
   }));
-  await output(directory + "/server/profile.json", json(server));
+  await portFile("server/profile.json", json(server));
   await output(directory + "/server/bridge.mjs", bridge);
   await output(directory + "/server/lsp-client.mjs", transport);
   await output(directory + "/LICENSE", license);
-  await output(directory + "/README.md", [
+  await portFile("README.md", [
     "# " + displayName,
     "",
     description + " Supported source extensions are " + extensions + ".",
@@ -98,6 +104,15 @@ for (const profile of profiles) {
     "",
   ].join("\n"));
 }
+
+await output("plugins/project-lsp/skills/project-lsp/assets/ports.json", json({
+  common: {
+    LICENSE: license.toString().replace(/\r\n/g, "\n"),
+    "server/bridge.mjs": bridge.toString().replace(/\r\n/g, "\n"),
+    "server/lsp-client.mjs": transport.toString().replace(/\r\n/g, "\n"),
+  },
+  plugins: bundledPorts,
+}));
 
 const catalogPath = ".agents/plugins/marketplace.json";
 const catalog = JSON.parse(await readFile(join(root, catalogPath), "utf8"));

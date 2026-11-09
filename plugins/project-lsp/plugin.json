@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "project-lsp",
+  "version": "0.1.0",
+  "description": "Detect project languages and activate the marketplace language-server plugins for that Git repository.",
+  "author": {
+    "name": "Codex Plugin Ports"
+  },
+  "repository": "https://github.com/Wayzer107/codex-plugin-ports",
+  "license": "Apache-2.0",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Project LSP",
+        "shortDescription": "Project-scoped language tools",
+        "longDescription": "Detect a repository’s source languages and activate the matching marketplace LSP plugins at project scope.",
+        "developerName": "Codex Plugin Ports",
+        "category": "Developer Tools",
+        "defaultPrompt": "Detect and activate the language-server plugins for this project."
+      }
+    }
+  }
+}
