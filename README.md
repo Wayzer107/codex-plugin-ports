@@ -7,6 +7,7 @@ Codex plugins adapted from Anthropic's Claude plugins. Each plugin is independen
 | [Codex Setup](plugins/codex-setup/README.md) | Read-only recommendations for hooks, MCP, skills, plugins, subagents, and repeatable workflows |
 | [AGENTS.md Management](plugins/agents-md-management/README.md) | Auditing project instructions and capturing durable session learnings |
 | [Project LSP](plugins/project-lsp/README.md) | Detecting source languages and enabling the matching LSP plugins in a Git project |
+| [Hookify](plugins/hookify/README.md) | Writing local Markdown rules for Codex hooks |
 
 ## Install from GitHub
 

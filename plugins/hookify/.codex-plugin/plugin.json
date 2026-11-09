@@ -1,0 +1,20 @@
+{
+  "name": "hookify",
+  "version": "0.1.0",
+  "description": "Create project-local Markdown rules that warn or block on Codex hook events.",
+  "author": {
+    "name": "Codex Plugin Ports"
+  },
+  "repository": "https://github.com/Wayzer107/codex-plugin-ports",
+  "license": "Apache-2.0",
+  "skills": "./skills",
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "Hookify",
+    "shortDescription": "Create custom Codex hooks",
+    "longDescription": "Write local Markdown rules for Codex tool calls, prompts, and completion checks.",
+    "developerName": "Codex Plugin Ports",
+    "category": "Developer Tools",
+    "defaultPrompt": "Help me create a Hookify rule for this project."
+  }
+}

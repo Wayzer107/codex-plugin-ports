@@ -1,0 +1,53 @@
+{
+  "description": "Hookify rules for Codex",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${PLUGIN_ROOT}/hooks/run.py\"",
+            "commandWindows": "python \"$env:PLUGIN_ROOT/hooks/run.py\"",
+            "timeout": 8
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${PLUGIN_ROOT}/hooks/run.py\"",
+            "commandWindows": "python \"$env:PLUGIN_ROOT/hooks/run.py\"",
+            "timeout": 8
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${PLUGIN_ROOT}/hooks/run.py\"",
+            "commandWindows": "python \"$env:PLUGIN_ROOT/hooks/run.py\"",
+            "timeout": 8
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${PLUGIN_ROOT}/hooks/run.py\"",
+            "commandWindows": "python \"$env:PLUGIN_ROOT/hooks/run.py\"",
+            "timeout": 8
+          }
+        ]
+      }
+    ]
+  }
+}
