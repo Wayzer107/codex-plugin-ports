@@ -1,0 +1,11 @@
+{
+  "name": "ruby-lsp",
+  "command": "ruby-lsp",
+  "extensionToLanguage": {
+    ".rb": "ruby",
+    ".rake": "ruby",
+    ".gemspec": "ruby",
+    ".ru": "ruby",
+    ".erb": "erb"
+  }
+}

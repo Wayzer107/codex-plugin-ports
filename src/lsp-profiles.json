@@ -1,0 +1,209 @@
+[
+  {
+    "plugin": "clangd-lsp",
+    "displayName": "Clangd LSP",
+    "language": "C and C++",
+    "install": "Install LLVM or your distribution's clangd package. Use the project's compilation database for accurate build flags.",
+    "documentation": "https://clangd.llvm.org/installation",
+    "server": {
+      "name": "clangd",
+      "command": "clangd",
+      "args": [
+        "--background-index"
+      ],
+      "extensionToLanguage": {
+        ".c": "c",
+        ".h": "c",
+        ".cpp": "cpp",
+        ".cc": "cpp",
+        ".cxx": "cpp",
+        ".hpp": "cpp",
+        ".hxx": "cpp",
+        ".C": "cpp",
+        ".H": "cpp"
+      }
+    }
+  },
+  {
+    "plugin": "csharp-lsp",
+    "displayName": "C# LSP",
+    "language": "C#",
+    "install": "Install the supported .NET SDK and run `dotnet tool install --global csharp-ls`. Open the directory containing the solution or project.",
+    "documentation": "https://github.com/razzmatazz/csharp-language-server#quick-start",
+    "server": {
+      "name": "csharp-ls",
+      "command": "csharp-ls",
+      "extensionToLanguage": {
+        ".cs": "csharp"
+      }
+    }
+  },
+  {
+    "plugin": "gopls-lsp",
+    "displayName": "Go LSP",
+    "language": "Go",
+    "install": "Run `go install golang.org/x/tools/gopls@latest` and make the Go binary directory available on PATH. Select the module or Go workspace root.",
+    "documentation": "https://go.dev/gopls/",
+    "server": {
+      "name": "gopls",
+      "command": "gopls",
+      "extensionToLanguage": {
+        ".go": "go"
+      }
+    }
+  },
+  {
+    "plugin": "jdtls-lsp",
+    "displayName": "Java LSP",
+    "language": "Java",
+    "install": "Install Eclipse JDT LS and the JDK required by that release. Put a working `jdtls` launcher on PATH. On Windows, use a launcher without a terminal pause if your distribution's batch file pauses on exit. Select the Maven or Gradle project root.",
+    "documentation": "https://github.com/eclipse-jdtls/eclipse.jdt.ls#running-from-the-command-line",
+    "server": {
+      "name": "jdtls",
+      "command": "jdtls",
+      "extensionToLanguage": {
+        ".java": "java"
+      },
+      "startupTimeout": 120000
+    }
+  },
+  {
+    "plugin": "kotlin-lsp",
+    "displayName": "Kotlin LSP",
+    "language": "Kotlin",
+    "install": "Install the official standalone Kotlin LSP. Check the release notes for its bundled or required runtime. Put `kotlin-lsp` or the newer `intellij-server` executable on PATH. The bridge passes `--stdio`.",
+    "documentation": "https://github.com/Kotlin/kotlin-lsp/releases",
+    "server": {
+      "name": "kotlin-lsp",
+      "command": "kotlin-lsp",
+      "args": [
+        "--stdio"
+      ],
+      "extensionToLanguage": {
+        ".kt": "kotlin",
+        ".kts": "kotlin"
+      },
+      "startupTimeout": 120000,
+      "fallbackCommand": "intellij-server"
+    }
+  },
+  {
+    "plugin": "lua-lsp",
+    "displayName": "Lua LSP",
+    "language": "Lua",
+    "install": "Install Lua Language Server and make `lua-language-server` available on PATH. Keep its runtime files alongside the distribution.",
+    "documentation": "https://luals.github.io/#install",
+    "server": {
+      "name": "lua",
+      "command": "lua-language-server",
+      "extensionToLanguage": {
+        ".lua": "lua"
+      }
+    }
+  },
+  {
+    "plugin": "php-lsp",
+    "displayName": "PHP LSP",
+    "language": "PHP",
+    "install": "Run `npm install -g intelephense` and make the npm bin directory available on PATH.",
+    "documentation": "https://github.com/bmewburn/intelephense-docs",
+    "server": {
+      "name": "intelephense",
+      "command": "intelephense",
+      "args": [
+        "--stdio"
+      ],
+      "extensionToLanguage": {
+        ".php": "php"
+      }
+    }
+  },
+  {
+    "plugin": "pyright-lsp",
+    "displayName": "Pyright LSP",
+    "language": "Python",
+    "install": "Run `npm install -g pyright` and make `pyright-langserver` available on PATH. Keep project interpreter and type-checker settings in the project's normal configuration.",
+    "documentation": "https://github.com/microsoft/pyright/blob/main/docs/installation.md",
+    "server": {
+      "name": "pyright",
+      "command": "pyright-langserver",
+      "args": [
+        "--stdio"
+      ],
+      "extensionToLanguage": {
+        ".py": "python",
+        ".pyi": "python"
+      }
+    }
+  },
+  {
+    "plugin": "ruby-lsp",
+    "displayName": "Ruby LSP",
+    "language": "Ruby and ERB",
+    "install": "Install Ruby LSP with `gem install ruby-lsp`. Prepare the project's bundle and use the Ruby version required by the project.",
+    "documentation": "https://shopify.github.io/ruby-lsp/",
+    "server": {
+      "name": "ruby-lsp",
+      "command": "ruby-lsp",
+      "extensionToLanguage": {
+        ".rb": "ruby",
+        ".rake": "ruby",
+        ".gemspec": "ruby",
+        ".ru": "ruby",
+        ".erb": "erb"
+      }
+    }
+  },
+  {
+    "plugin": "rust-analyzer-lsp",
+    "displayName": "Rust Analyzer LSP",
+    "language": "Rust",
+    "install": "Install the rust-analyzer component with `rustup component add rust-analyzer`. Select the Cargo workspace root. If an existing Rust Analyzer MCP connection already serves that workspace, use one integration to avoid indexing it twice.",
+    "documentation": "https://rust-analyzer.github.io/book/installation.html",
+    "server": {
+      "name": "rust-analyzer",
+      "command": "rust-analyzer",
+      "extensionToLanguage": {
+        ".rs": "rust"
+      }
+    }
+  },
+  {
+    "plugin": "swift-lsp",
+    "displayName": "Swift LSP",
+    "language": "Swift",
+    "install": "Install a Swift toolchain that includes SourceKit-LSP and make `sourcekit-lsp` available on PATH. Select the Swift package or build workspace root.",
+    "documentation": "https://www.swift.org/install/",
+    "server": {
+      "name": "sourcekit-lsp",
+      "command": "sourcekit-lsp",
+      "extensionToLanguage": {
+        ".swift": "swift"
+      }
+    }
+  },
+  {
+    "plugin": "typescript-lsp",
+    "displayName": "TypeScript LSP",
+    "language": "TypeScript and JavaScript",
+    "install": "Run `npm install -g typescript@6 typescript-language-server` and make the npm bin directory available on PATH. Select the package or workspace containing its TypeScript or JavaScript configuration.",
+    "documentation": "https://github.com/typescript-language-server/typescript-language-server#installing",
+    "server": {
+      "name": "typescript",
+      "command": "typescript-language-server",
+      "args": [
+        "--stdio"
+      ],
+      "extensionToLanguage": {
+        ".ts": "typescript",
+        ".tsx": "typescriptreact",
+        ".js": "javascript",
+        ".jsx": "javascriptreact",
+        ".mts": "typescript",
+        ".cts": "typescript",
+        ".mjs": "javascript",
+        ".cjs": "javascript"
+      }
+    }
+  }
+]

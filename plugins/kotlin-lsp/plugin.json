@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "kotlin-lsp",
+  "version": "0.1.0",
+  "description": "Use kotlin-lsp for Kotlin code navigation and diagnostics in Codex.",
+  "author": {
+    "name": "Codex Plugin Ports"
+  },
+  "repository": "https://github.com/Wayzer107/codex-plugin-ports",
+  "license": "Apache-2.0",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Kotlin LSP",
+        "shortDescription": "Kotlin code intelligence",
+        "longDescription": "Use kotlin-lsp for Kotlin code navigation and diagnostics in Codex.",
+        "developerName": "Codex Plugin Ports",
+        "category": "Developer Tools",
+        "defaultPrompt": "Use Kotlin LSP to find definitions in this workspace."
+      }
+    }
+  }
+}

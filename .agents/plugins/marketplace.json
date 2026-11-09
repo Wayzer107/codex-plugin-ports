@@ -27,6 +27,150 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Developer Tools"
+    },
+    {
+      "name": "clangd-lsp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/clangd-lsp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "csharp-lsp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/csharp-lsp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "gopls-lsp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/gopls-lsp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "jdtls-lsp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/jdtls-lsp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "kotlin-lsp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/kotlin-lsp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "lua-lsp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/lua-lsp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "php-lsp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/php-lsp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "pyright-lsp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/pyright-lsp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "ruby-lsp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/ruby-lsp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "rust-analyzer-lsp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/rust-analyzer-lsp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "swift-lsp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/swift-lsp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "typescript-lsp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/typescript-lsp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
     }
   ]
 }

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "lua": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "./server/bridge.mjs",
+        "./server/profile.json"
+      ],
+      "cwd": "${PLUGIN_ROOT}"
+    }
+  }
+}
