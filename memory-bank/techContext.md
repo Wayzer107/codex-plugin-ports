@@ -4,7 +4,7 @@
 Node.js 22+ (ESM `.mjs`, `node --test`), Python 3 stdlib (hookify hook runner and test), JSON manifests, Markdown skills.
 
 ## Development Setup
-No dependencies or package manifests. `.claude/hooks/session-start.sh` (registered in `.claude/settings.json`) verifies Node 22+ and Python 3; in Claude cloud sessions it also adds the `claude-plugins-official` marketplace and installs and enables `claude-md-management` plus every `*-lsp` plugin (user scope), skipping via a stamp in `~/.claude/plugins/` once done. `.codex/hooks.json` runs the same script with `SESSION_HOOK_FORCE=1`, which does only the toolchain check. The "plugin ports" cloud environment setup script installs the same plugins on fresh containers.
+No dependencies or package manifests. `.claude/hooks/session-start.sh` (registered in `.claude/settings.json`) verifies Node 22+ and Python 3; in Claude cloud sessions it also adds the `claude-plugins-official` marketplace and installs and enables `claude-md-management` plus every `*-lsp` plugin (user scope), skipping via a stamp in `~/.claude/plugins/` once done. On every start it also runs `claude plugin enable` for any of those plugins disabled at user or local scope (a project-scope disable in the committed settings only warns). `.codex/hooks.json` runs the same script with `SESSION_HOOK_FORCE=1`, which does only the toolchain check. The "plugin ports" cloud environment setup script installs the same plugins on fresh containers.
 
 ## Technical Constraints
 - Codex ignores project `.codex/hooks.json` until the project is trusted, and the hook itself shows `untrusted` until approved in `/hooks`.

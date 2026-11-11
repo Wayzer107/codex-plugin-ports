@@ -78,4 +78,44 @@ PY
       echo "Some Claude plugins could not be added; will retry at the next session start." >&2
     fi
   fi
+
+  # Every start: run `claude plugin enable` for each of these plugins that is
+  # not enabled (for example after `claude plugin disable`). Local settings
+  # override project settings, which override user settings, so a `false` is
+  # undone at the scope that set it. The committed project settings file is
+  # never edited; a disable there only warns. Plugins that are already enabled
+  # are skipped, so this costs nothing then.
+  catalog="$HOME/.claude/plugins/marketplaces/$mp/.claude-plugin/marketplace.json"
+  if [ -f "$catalog" ]; then
+    todo="$(python3 - "$catalog" "$mp" "$HOME/.claude/settings.json" .claude/settings.json .claude/settings.local.json <<'PY' || true
+import json, os, sys
+catalog_path, mp, user_path, project_path, local_path = sys.argv[1:6]
+def plugins(path):
+    try:
+        return json.load(open(path)).get("enabledPlugins", {})
+    except Exception:
+        return {}
+user, project, local = plugins(user_path), plugins(project_path), plugins(local_path)
+names = ["claude-md-management"] + [p["name"] for p in json.load(open(catalog_path))["plugins"] if p["name"].endswith("-lsp")]
+for n in names:
+    key = n + "@" + mp
+    if local.get(key) is False:
+        print(n + ":local")
+    elif project.get(key) is False:
+        print(n + ":project")
+    elif user.get(key) is not True:
+        print(n + ":user")
+PY
+)"
+    for item in $todo; do
+      name="${item%%:*}"
+      scope="${item##*:}"
+      if [ "$scope" = project ]; then
+        echo "Claude plugin $name@$mp is disabled in .claude/settings.json (committed); not changing it." >&2
+        continue
+      fi
+      claude plugin enable --scope "$scope" "$name@$mp" >/dev/null 2>&1 \
+        || echo "Could not enable Claude plugin $name@$mp ($scope scope)." >&2
+    done
+  fi
 fi
