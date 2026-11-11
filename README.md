@@ -9,6 +9,21 @@ Codex plugins adapted from Anthropic's Claude plugins. Each plugin is independen
 | [Project LSP](plugins/project-lsp/README.md) | Detecting source languages and enabling the matching LSP plugins in a Git project |
 | [Hookify](plugins/hookify/README.md) | Writing local Markdown rules for Codex hooks |
 
+## Claude Code marketplace
+
+The same repository is also a Claude Code marketplace. [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) lists 13 plugins in [`claude-plugins/`](claude-plugins), which are unmodified copies of the originals from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official/tree/0412be76f50ab4f4f8abff3753efa9269fbbca5b/plugins) at commit `0412be76f50ab4f4f8abff3753efa9269fbbca5b`. Each marketplace entry is also copied from upstream, with only `source` changed to point at `claude-plugins/`. The Codex ports remain in [`plugins/`](plugins).
+
+~~~bash
+/plugin marketplace add Wayzer107/codex-plugin-ports
+/plugin install hookify@codex-plugin-ports
+~~~
+
+Included: `hookify` and the `clangd-lsp`, `csharp-lsp`, `gopls-lsp`, `jdtls-lsp`, `kotlin-lsp`, `lua-lsp`, `php-lsp`, `pyright-lsp`, `ruby-lsp`, `rust-analyzer-lsp`, `swift-lsp` and `typescript-lsp` language server plugins. The language server plugins need the matching native server on your PATH.
+
+Also included: [Project LSP for Claude Code](claude-ports/project-lsp/README.md) (`project-lsp@codex-plugin-ports`), the port of the Codex Project LSP plugin. It detects a Git project's languages and enables only the matching LSP plugins from `claude-plugins-official` in the project's `.claude/settings.json`, automatically at session start or on request.
+
+Not included: `claude-code-setup` and `claude-md-management`. Claude Code reserves names beginning with `claude-` for Anthropic, so a third-party marketplace cannot list them without renaming. Use them from the official marketplace instead.
+
 ## Install from GitHub
 
 Run these commands with a Codex CLI that supports plugin marketplaces.
@@ -60,6 +75,17 @@ codex plugin add 'clangd-lsp@codex-plugin-ports'
 ~~~
 
 Start a new Codex conversation in your project and ask it to use the installed language server for a symbol, definition, reference, hover, or diagnostic query. The MCP tools start the native server on demand for a trusted project root. The bridge reads saved source files and refreshes them when they change. Individual capabilities depend on the native server and its indexing state. A native server may invoke project tooling during indexing.
+
+## MCPB bundles
+
+Each language server plugin is also built as a standalone [MCPB](https://github.com/anthropics/mcpb) bundle in [`dist/mcpb/`](dist/mcpb), for hosts such as Claude Desktop that install a single `.mcpb` file. A bundle contains the same bridge as the Codex plugin and has no dependencies beyond Node.js 22 or newer and the native language server on PATH. It asks for no install-time settings: call `lsp_start` with the absolute project root, as described in the plugin's README.
+
+Rebuild all bundles after changing the bridge or profiles (the build needs network access to fetch the MCPB CLI):
+
+~~~bash
+node scripts/sync-lsp-plugins.mjs
+node scripts/build-mcpb.mjs
+~~~
 
 ## Maintain the ports
 

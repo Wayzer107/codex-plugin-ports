@@ -1,0 +1,6 @@
+{
+  "managed": [
+    "pyright-lsp@claude-plugins-official",
+    "typescript-lsp@claude-plugins-official"
+  ]
+}

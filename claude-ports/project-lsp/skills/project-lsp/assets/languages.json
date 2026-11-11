@@ -1,0 +1,59 @@
+{
+  "clangd-lsp": [
+    ".c",
+    ".h",
+    ".cpp",
+    ".cc",
+    ".cxx",
+    ".hpp",
+    ".hxx",
+    ".C",
+    ".H"
+  ],
+  "csharp-lsp": [
+    ".cs"
+  ],
+  "gopls-lsp": [
+    ".go"
+  ],
+  "jdtls-lsp": [
+    ".java"
+  ],
+  "kotlin-lsp": [
+    ".kt",
+    ".kts"
+  ],
+  "lua-lsp": [
+    ".lua"
+  ],
+  "php-lsp": [
+    ".php"
+  ],
+  "pyright-lsp": [
+    ".py",
+    ".pyi"
+  ],
+  "ruby-lsp": [
+    ".rb",
+    ".rake",
+    ".gemspec",
+    ".ru",
+    ".erb"
+  ],
+  "rust-analyzer-lsp": [
+    ".rs"
+  ],
+  "swift-lsp": [
+    ".swift"
+  ],
+  "typescript-lsp": [
+    ".ts",
+    ".tsx",
+    ".js",
+    ".jsx",
+    ".mts",
+    ".cts",
+    ".mjs",
+    ".cjs"
+  ]
+}

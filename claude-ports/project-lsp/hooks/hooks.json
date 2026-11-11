@@ -1,0 +1,16 @@
+{
+  "description": "Enable the LSP plugins matching the project's languages at session start",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/skills/project-lsp/scripts/project-lsp.mjs\" --hook",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
