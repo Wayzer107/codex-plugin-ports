@@ -5,14 +5,13 @@
 - Claude Code marketplace with 13 verbatim plugins (`diff -r` clean, `claude plugin validate .` passes).
 - 12 MCPB bundles; two smoke-tested over stdio (handshake, 9 tools, `lsp_status`).
 - SessionStart hook: toolchain check, plugin install and enable in cloud sessions, re-enable on every start; tested in throwaway `HOME`s and a repo copy. Codex discovers its project hook when trusted.
-- Environment setup script installs the same 14 plugins and approves project MCP servers via user settings (tested in a fresh `HOME`: all 12 `.mcp.json` servers connected; not yet in a real fresh container).
+- Environment setup script (project-lsp policy saved: LSP plugins installed but `false` at user scope, `claude-md-management` and `project-lsp` enabled) installs the plugins and approves project MCP servers via user settings (tested in a fresh `HOME`: all 12 `.mcp.json` servers connected; not yet in a real fresh container).
 - `.mcp.json` LSP bridges connect when approved (verified with `claude mcp list` in a trusted copy and with the flag in user settings).
 - Claude Code project-lsp port: end-to-end verified in a throwaway HOME (only detected languages enabled per repo); plugin-validator PASS, skill-reviewer fixes applied.
 - `CLAUDE.md` in place and audited (46 lines, within the 200-line guideline; no extraction needed); all tests (32 Node, Hookify) and the sync check pass.
 
 ## What's Left to Build
 - Review and merge draft PR 1.
-- Save the updated setup script (project-lsp policy) to the "plugin ports" environment if not yet done.
 - Confirm the setup script and hook in a real fresh cloud session.
 - Run the Codex hook end-to-end in a logged-in Codex session.
 - Optional: replace hard-coded plugin counts in `CLAUDE.md`; README trust notes; detect stale `dist/mcpb/` bundles; sign bundles.
