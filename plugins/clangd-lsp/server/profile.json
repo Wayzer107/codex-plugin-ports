@@ -1,6 +1,7 @@
 {
   "name": "clangd",
   "command": "clangd",
+  "autoInstall": true,
   "args": [
     "--background-index"
   ],

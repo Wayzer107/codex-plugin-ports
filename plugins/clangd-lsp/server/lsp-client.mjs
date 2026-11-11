@@ -3,6 +3,7 @@ import { stat } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
+import { ensureClangdInstalled } from "./clangd-installer.mjs";
 
 const onWindows = process.platform === "win32";
 const execFileAsync = promisify(execFile);
@@ -150,18 +151,34 @@ function clientReply(method, params, settings, folders) {
 }
 
 export async function startLsp(profile, root, signal) {
+  let missingError;
   try {
     return await startCandidate(profile, root, signal);
   } catch (error) {
-    if (error?.code !== "ENOENT" || !profile.fallbackCommand) throw error;
+    if (error?.code !== "ENOENT") throw error;
+    missingError = error;
   }
 
-  try {
-    return await startCandidate({ ...profile, command: profile.fallbackCommand }, root, signal);
-  } catch (error) {
-    if (error?.code !== "ENOENT") throw error;
+  if (profile.fallbackCommand) {
+    try {
+      return await startCandidate({ ...profile, command: profile.fallbackCommand }, root, signal);
+    } catch (error) {
+      if (error?.code !== "ENOENT") throw error;
+      missingError = error;
+    }
+  }
+
+  if (profile.autoInstall === true) {
+    signal?.throwIfAborted();
+    const command = await ensureClangdInstalled(signal);
+    signal?.throwIfAborted();
+    return startCandidate({ ...profile, command }, root, signal);
+  }
+
+  if (profile.fallbackCommand) {
     throw spawnError(profile.command, "ENOENT", profile.fallbackCommand);
   }
+  throw missingError;
 }
 
 async function startCandidate(profile, root, signal) {
