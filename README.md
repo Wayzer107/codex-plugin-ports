@@ -9,6 +9,19 @@ Codex plugins adapted from Anthropic's Claude plugins. Each plugin is independen
 | [Project LSP](plugins/project-lsp/README.md) | Detecting source languages and enabling the matching LSP plugins in a Git project |
 | [Hookify](plugins/hookify/README.md) | Writing local Markdown rules for Codex hooks |
 
+## Claude Code marketplace
+
+The same repository is also a Claude Code marketplace. [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) lists 13 plugins in [`claude-plugins/`](claude-plugins), which are unmodified copies of the originals from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official/tree/0412be76f50ab4f4f8abff3753efa9269fbbca5b/plugins) at commit `0412be76f50ab4f4f8abff3753efa9269fbbca5b`. Each marketplace entry is also copied from upstream, with only `source` changed to point at `claude-plugins/`. The Codex ports remain in [`plugins/`](plugins).
+
+~~~bash
+/plugin marketplace add Wayzer107/codex-plugin-ports
+/plugin install hookify@codex-plugin-ports
+~~~
+
+Included: `hookify` and the `clangd-lsp`, `csharp-lsp`, `gopls-lsp`, `jdtls-lsp`, `kotlin-lsp`, `lua-lsp`, `php-lsp`, `pyright-lsp`, `ruby-lsp`, `rust-analyzer-lsp`, `swift-lsp` and `typescript-lsp` language server plugins. The language server plugins need the matching native server on your PATH.
+
+Not included: `claude-code-setup` and `claude-md-management`. Claude Code reserves names beginning with `claude-` for Anthropic, so a third-party marketplace cannot list them without renaming. Use them from the official marketplace instead.
+
 ## Install from GitHub
 
 Run these commands with a Codex CLI that supports plugin marketplaces.
