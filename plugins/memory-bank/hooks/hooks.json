@@ -1,0 +1,17 @@
+{
+  "description": "Remind Codex to update a stale project memory bank",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${PLUGIN_ROOT}/hooks/memory_bank_hook.py\"",
+            "commandWindows": "python \"$env:PLUGIN_ROOT/hooks/memory_bank_hook.py\"",
+            "timeout": 8
+          }
+        ]
+      }
+    ]
+  }
+}
