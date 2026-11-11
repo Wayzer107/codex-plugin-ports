@@ -1,22 +1,29 @@
 # Active Context
 
 ## Current Focus
-Claude Code marketplace support and session-start hooks, delivered in draft PR 1 (branch `claude/claude-code-marketplace`).
+Draft PR 1 (branch `claude/claude-code-marketplace`): Claude Code marketplace, MCPB bundles, session hooks with plugin installation, and `CLAUDE.md`.
 
 ## Recent Changes
-- Added `.claude-plugin/marketplace.json` and `claude-plugins/` (13 plugins).
-- Added Claude (`.claude/`) and Codex (`.codex/hooks.json`) SessionStart hooks.
-- Verified Codex marketplace load and hook discovery with the Codex CLI.
-- Added this memory bank.
+- Added `CLAUDE.md` (about 400 tokens): commands including single-test runs, architecture (generated LSP bridge, manifest styles, MCPB), hook behaviour, pointer to this memory bank.
+- `.claude/hooks/session-start.sh` now, in Claude cloud sessions only, installs and enables `claude-md-management` and every `*-lsp` plugin from `claude-plugins-official` (stamp-skipped), and on every start runs `claude plugin enable` for any disabled at user or local scope (project-scope disable only warns).
+- The "plugin ports" cloud environment setup script installs the same plugins on fresh containers (stored on the environment, not in git).
+- `scripts/build-mcpb.mjs` and 12 committed bundles in `dist/mcpb/`.
+- `.claude/settings.json` enables `claude-md-management@claude-plugins-official`.
 
 ## Next Steps
-Await PR review; decide whether to add README notes on Codex trust steps.
+Await review of PR 1. Optional: README note on Codex trust steps; a staleness check for `dist/mcpb/`.
 
 ## Active Decisions & Considerations
-Excluded `claude-`-prefixed plugins from the Claude marketplace; revisit only if the user wants renamed variants.
+- `claude-`-prefixed plugins stay out of our Claude marketplace (reserved names).
+- `dist/` is tracked on purpose (user request).
+- Hook and setup script duplicate the plugin logic; change both together.
 
 ## Important Patterns & Preferences
-Copies must stay unmodified. Commits end with the Co-Authored-By and Claude-Session lines. User prefers a formal tone and Dutch context for general advice.
+Copies in `claude-plugins/` stay unmodified. Commits end with the Co-Authored-By and Claude-Session lines. User prefers a formal tone and Dutch context for general advice.
 
 ## Learnings & Insights
-Claude LSP plugins live in marketplace entries. Codex needs project trust and hook trust before running project hooks.
+- Claude LSP plugins live in marketplace entries (`lspServers`).
+- A fresh Claude CLI knows only `anthropic-plugin-directory`; `claude plugin marketplace add` is needed for `claude-plugins-official`.
+- `claude plugin enable` exits 1 on an already-enabled plugin; `disable` without `--scope` may write to the committed project settings.
+- The cloud container sets `CLAUDE_CODE_REMOTE=true` in its own environment, so the Codex path must be gated on `SESSION_HOOK_FORCE` explicitly.
+- Codex needs project trust and hook trust before running project hooks.
