@@ -1,0 +1,100 @@
+{
+  "mcpServers": {
+    "clangd-lsp": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/clangd-lsp/server/bridge.mjs",
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/clangd-lsp/server/profile.json"
+      ]
+    },
+    "csharp-lsp": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/csharp-lsp/server/bridge.mjs",
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/csharp-lsp/server/profile.json"
+      ]
+    },
+    "gopls-lsp": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/gopls-lsp/server/bridge.mjs",
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/gopls-lsp/server/profile.json"
+      ]
+    },
+    "jdtls-lsp": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/jdtls-lsp/server/bridge.mjs",
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/jdtls-lsp/server/profile.json"
+      ]
+    },
+    "kotlin-lsp": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/kotlin-lsp/server/bridge.mjs",
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/kotlin-lsp/server/profile.json"
+      ]
+    },
+    "lua-lsp": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/lua-lsp/server/bridge.mjs",
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/lua-lsp/server/profile.json"
+      ]
+    },
+    "php-lsp": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/php-lsp/server/bridge.mjs",
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/php-lsp/server/profile.json"
+      ]
+    },
+    "pyright-lsp": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/pyright-lsp/server/bridge.mjs",
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/pyright-lsp/server/profile.json"
+      ]
+    },
+    "ruby-lsp": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/ruby-lsp/server/bridge.mjs",
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/ruby-lsp/server/profile.json"
+      ]
+    },
+    "rust-analyzer-lsp": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/rust-analyzer-lsp/server/bridge.mjs",
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/rust-analyzer-lsp/server/profile.json"
+      ]
+    },
+    "swift-lsp": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/swift-lsp/server/bridge.mjs",
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/swift-lsp/server/profile.json"
+      ]
+    },
+    "typescript-lsp": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/typescript-lsp/server/bridge.mjs",
+        "${CLAUDE_PROJECT_DIR:-.}/plugins/typescript-lsp/server/profile.json"
+      ]
+    }
+  }
+}

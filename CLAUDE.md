@@ -33,6 +33,7 @@ There is no linter and no CI; the sync `--check`, the tests and `claude plugin v
 - **Two Codex manifest styles**: most ports use a root `plugin.json` (agent-plugins.org schema, Codex UI under `extensions["com.openai"]`), with `mcp.json` for LSP ports. `hookify` instead uses `.codex-plugin/plugin.json` with `hooks/hooks.json` (Codex plugin hooks via `${PLUGIN_ROOT}`), driven by `hooks/run.py`.
 - **project-lsp**: a skill (not a server) whose scripts in `plugins/project-lsp/skills/project-lsp/scripts/` detect project languages and enable the matching `*-lsp` ports through the project marketplace; covered by `tests/project-lsp.test.mjs`.
 - **MCPB bundles**: `scripts/build-mcpb.mjs` wraps each LSP package's `server/` with a generated `manifest.json` into `dist/mcpb/` (committed on purpose, not gitignored). Rebuild after bridge changes; the sync check does not detect stale bundles.
+- **Project MCP servers**: `.mcp.json` runs the 12 LSP bridges from `plugins/<name>-lsp/server/` for Claude Code itself (via `${CLAUDE_PROJECT_DIR:-.}`). `enableAllProjectMcpServers` in `.claude/settings.json` only takes effect once the project is trusted; otherwise approve the servers once or set the flag in user settings. Regenerate `.mcp.json` by hand if LSP packages are added.
 - **The Codex marketplace file is hand-edited**: adding a plugin means updating `.agents/plugins/marketplace.json` and the README tables yourself.
 
 ## Session hooks
