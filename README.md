@@ -74,6 +74,17 @@ codex plugin add 'clangd-lsp@codex-plugin-ports'
 
 Start a new Codex conversation in your project and ask it to use the installed language server for a symbol, definition, reference, hover, or diagnostic query. The MCP tools start the native server on demand for a trusted project root. The bridge reads saved source files and refreshes them when they change. Individual capabilities depend on the native server and its indexing state. A native server may invoke project tooling during indexing.
 
+## MCPB bundles
+
+Each language server plugin is also built as a standalone [MCPB](https://github.com/anthropics/mcpb) bundle in [`dist/mcpb/`](dist/mcpb), for hosts such as Claude Desktop that install a single `.mcpb` file. A bundle contains the same bridge as the Codex plugin and has no dependencies beyond Node.js 22 or newer and the native language server on PATH. It asks for no install-time settings: call `lsp_start` with the absolute project root, as described in the plugin's README.
+
+Rebuild all bundles after changing the bridge or profiles (the build needs network access to fetch the MCPB CLI):
+
+~~~bash
+node scripts/sync-lsp-plugins.mjs
+node scripts/build-mcpb.mjs
+~~~
+
 ## Maintain the ports
 
 The shared bridge and language profiles live under [`src/`](src). Each package contains a generated copy so it can be installed independently. After changing the bridge or profiles, regenerate the packages and run the checks.

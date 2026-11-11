@@ -14,6 +14,7 @@ No dependencies or package manifests. Session-start hooks only verify the toolch
 Upstream: `anthropics/claude-plugins-official`. Tools: Claude Code CLI (`claude plugin validate .`), Codex CLI (installed globally for testing, v0.167.1).
 
 ## Tool Usage Patterns
+- `node scripts/build-mcpb.mjs` builds `dist/mcpb/<name>.mcpb` for the 12 LSP packages (CLI pinned `@anthropic-ai/mcpb@2.1.2`). `dist/` is deliberately tracked, not gitignored.
 - `node --test` (21 tests), `python3 tests/hookify_test.py`, `node scripts/sync-lsp-plugins.mjs --check`.
 - `claude plugin validate .` passes (warns only that copied READMEs lack a marketplace install line; left as-is).
 - Codex checks: `codex plugin list --marketplace codex-plugin-ports`; hook discovery via `codex app-server` method `hooks/list`.
