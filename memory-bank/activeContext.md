@@ -7,12 +7,12 @@ Draft PR 1 (branch `claude/claude-code-marketplace`): Claude Code marketplace, M
 - Added `.mcp.json` with the 12 LSP bridge servers (`${CLAUDE_PROJECT_DIR:-.}/plugins/<name>-lsp/server/`) and `enableAllProjectMcpServers: true` in `.claude/settings.json`; noted in `CLAUDE.md`.
 - Added `CLAUDE.md` (about 400 tokens): commands including single-test runs, architecture (generated LSP bridge, manifest styles, MCPB), hook behaviour, pointer to this memory bank.
 - `.claude/hooks/session-start.sh` now, in Claude cloud sessions only, installs and enables `claude-md-management` and every `*-lsp` plugin from `claude-plugins-official` (stamp-skipped), and on every start runs `claude plugin enable` for any disabled at user or local scope (project-scope disable only warns).
-- The "plugin ports" cloud environment setup script installs the same plugins on fresh containers (stored on the environment, not in git).
+- The "plugin ports" cloud environment setup script installs the same plugins on fresh containers and sets `enableAllProjectMcpServers: true` in user settings, so the `.mcp.json` servers are approved (stored on the environment, not in git).
 - `scripts/build-mcpb.mjs` and 12 committed bundles in `dist/mcpb/`.
 - `.claude/settings.json` enables `claude-md-management@claude-plugins-official`.
 
 ## Next Steps
-Await review of PR 1. Offered: add `enableAllProjectMcpServers` to the environment setup script (user settings) so cloud sessions approve the servers; optionally trim `.mcp.json` to used languages. Optional: README note on Codex trust steps; a staleness check for `dist/mcpb/`.
+Await review of PR 1. Done: the setup script now sets `enableAllProjectMcpServers`. Optional: optionally trim `.mcp.json` to used languages. Optional: README note on Codex trust steps; a staleness check for `dist/mcpb/`.
 
 ## Active Decisions & Considerations
 - `claude-`-prefixed plugins stay out of our Claude marketplace (reserved names).
