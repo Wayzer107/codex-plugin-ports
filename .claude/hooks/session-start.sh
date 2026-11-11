@@ -1,12 +1,13 @@
 #!/bin/bash
 set -euo pipefail
 
-# Only run in Claude Code cloud sessions.
-if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
+# Run in Claude Code cloud sessions, or when forced (the Codex hook in
+# .codex/hooks.json sets SESSION_HOOK_FORCE=1).
+if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ] && [ "${SESSION_HOOK_FORCE:-}" != "1" ]; then
   exit 0
 fi
 
-cd "${CLAUDE_PROJECT_DIR:-.}"
+cd "${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
 
 # This repository has no package manifests: the tests and sync script use only
 # Node.js 22+ and Python 3 from the standard library, so nothing is installed.
