@@ -294,6 +294,16 @@
           }
         }
       }
+    },
+    {
+      "name": "project-lsp",
+      "description": "Detect a Git project's source languages and enable the matching LSP plugins from claude-plugins-official in the project's settings.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Codex Plugin Ports"
+      },
+      "source": "./claude-ports/project-lsp",
+      "category": "development"
     }
   ]
 }

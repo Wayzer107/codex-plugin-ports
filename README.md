@@ -20,6 +20,8 @@ The same repository is also a Claude Code marketplace. [`.claude-plugin/marketpl
 
 Included: `hookify` and the `clangd-lsp`, `csharp-lsp`, `gopls-lsp`, `jdtls-lsp`, `kotlin-lsp`, `lua-lsp`, `php-lsp`, `pyright-lsp`, `ruby-lsp`, `rust-analyzer-lsp`, `swift-lsp` and `typescript-lsp` language server plugins. The language server plugins need the matching native server on your PATH.
 
+Also included: [Project LSP for Claude Code](claude-ports/project-lsp/README.md) (`project-lsp@codex-plugin-ports`), the port of the Codex Project LSP plugin. It detects a Git project's languages and enables only the matching LSP plugins from `claude-plugins-official` in the project's `.claude/settings.json`, automatically at session start or on request.
+
 Not included: `claude-code-setup` and `claude-md-management`. Claude Code reserves names beginning with `claude-` for Anthropic, so a third-party marketplace cannot list them without renaming. Use them from the official marketplace instead.
 
 ## Install from GitHub

@@ -1,0 +1,11 @@
+{
+  "name": "project-lsp",
+  "version": "0.1.0",
+  "description": "Detect a Git project's source languages and enable the matching LSP plugins from claude-plugins-official in the project's settings.",
+  "author": {
+    "name": "Codex Plugin Ports"
+  },
+  "repository": "https://github.com/Wayzer107/codex-plugin-ports",
+  "license": "Apache-2.0",
+  "keywords": ["lsp", "language-server", "project"]
+}
