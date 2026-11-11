@@ -4,6 +4,7 @@
 Draft PR 1 (branch `claude/claude-code-marketplace`): Claude Code marketplace, MCPB bundles, session hooks with plugin installation, `CLAUDE.md`, and project MCP servers.
 
 ## Recent Changes
+- Ran the claude-md-optimizer audit: `CLAUDE.md` is 46 lines (threshold 200), no `AGENTS.md`/Copilot files, no git-crypt, nothing parses `CLAUDE.md`; no restructuring done. Optional follow-ups offered: drop hard-coded plugin counts, merge the `.mcp.json` regeneration note into the add-a-plugin checklist.
 - Added `.mcp.json` with the 12 LSP bridge servers (`${CLAUDE_PROJECT_DIR:-.}/plugins/<name>-lsp/server/`) and `enableAllProjectMcpServers: true` in `.claude/settings.json`; noted in `CLAUDE.md`.
 - Added `CLAUDE.md` (about 400 tokens): commands including single-test runs, architecture (generated LSP bridge, manifest styles, MCPB), hook behaviour, pointer to this memory bank.
 - `.claude/hooks/session-start.sh` now, in Claude cloud sessions only, installs and enables `claude-md-management` and every `*-lsp` plugin from `claude-plugins-official` (stamp-skipped), and on every start runs `claude plugin enable` for any disabled at user or local scope (project-scope disable only warns).
@@ -23,6 +24,7 @@ Await review of PR 1. Done: the setup script now sets `enableAllProjectMcpServer
 Copies in `claude-plugins/` stay unmodified. Commits end with the Co-Authored-By and Claude-Session lines. User prefers a formal tone and Dutch context for general advice.
 
 ## Learnings & Insights
+- The memory-bank Stop hook compares file mtimes; after a fresh clone every file shares the checkout time, so it flags `src/` and `scripts/` files that did not change (check `git status`/`git log` before assuming work happened).
 - Claude LSP plugins live in marketplace entries (`lspServers`).
 - A fresh Claude CLI knows only `anthropic-plugin-directory`; `claude plugin marketplace add` is needed for `claude-plugins-official`.
 - `claude plugin enable` exits 1 on an already-enabled plugin; `disable` without `--scope` may write to the committed project settings.
