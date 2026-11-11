@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "ruby-lsp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Use ruby-lsp for Ruby and ERB code navigation and diagnostics in Codex.",
   "author": {
     "name": "Codex Plugin Ports"

@@ -3,5 +3,10 @@
   "command": "gopls",
   "extensionToLanguage": {
     ".go": "go"
-  }
+  },
+  "rootMarkers": [
+    "go.work",
+    "go.mod"
+  ],
+  "install": "Run `go install golang.org/x/tools/gopls@latest` and make the Go binary directory available on PATH. Select the module or Go workspace root."
 }

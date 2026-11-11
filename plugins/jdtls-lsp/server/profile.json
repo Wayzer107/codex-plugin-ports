@@ -1,8 +1,16 @@
 {
   "name": "jdtls",
   "command": "jdtls",
+  "startupTimeout": 120000,
   "extensionToLanguage": {
     ".java": "java"
   },
-  "startupTimeout": 120000
+  "rootMarkers": [
+    "settings.gradle",
+    "settings.gradle.kts",
+    "build.gradle",
+    "build.gradle.kts",
+    "pom.xml"
+  ],
+  "install": "Install Eclipse JDT LS and the JDK required by that release. Put a working `jdtls` launcher on PATH. On Windows, use a launcher without a terminal pause if your distribution's batch file pauses on exit. Select the Maven or Gradle project root."
 }

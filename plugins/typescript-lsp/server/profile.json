@@ -13,5 +13,11 @@
     ".cts": "typescript",
     ".mjs": "javascript",
     ".cjs": "javascript"
-  }
+  },
+  "rootMarkers": [
+    "tsconfig.json",
+    "jsconfig.json",
+    "package.json"
+  ],
+  "install": "Run `npm install -g typescript@6 typescript-language-server` and make the npm bin directory available on PATH. Select the package or workspace containing its TypeScript or JavaScript configuration."
 }

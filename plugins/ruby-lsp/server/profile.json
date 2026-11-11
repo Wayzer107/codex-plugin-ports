@@ -7,5 +7,9 @@
     ".gemspec": "ruby",
     ".ru": "ruby",
     ".erb": "erb"
-  }
+  },
+  "rootMarkers": [
+    "Gemfile"
+  ],
+  "install": "Install Ruby LSP with `gem install ruby-lsp`. Prepare the project's bundle and use the Ruby version required by the project."
 }

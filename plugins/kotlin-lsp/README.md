@@ -15,9 +15,16 @@ After adding the marketplace, install this plugin and start a new Codex conversa
 codex plugin add 'kotlin-lsp@codex-plugin-ports'
 ~~~
 
-Ask Codex to use the kotlin-lsp language-server tools for your project. Call `lsp_start` with the absolute project root and poll `lsp_status` if initialization is pending. Queries use saved files and zero-based UTF-16 positions. The available features and indexing behavior depend on the native server.
+Ask Codex to use the kotlin-lsp language-server tools for your project. Every query tool takes a `file` (an absolute path works best) and starts kotlin-lsp for that file's project on first use, then waits for it to initialize. There is no separate start step.
 
-Open trusted workspaces. A native language server can run build or project tools while indexing. Stop the workspace with `lsp_stop` when you finish or before starting another workspace.
+- **Project root**: the outermost directory inside the file's Git repository that contains `settings.gradle.kts`, `settings.gradle`, `build.gradle.kts`, `build.gradle`, `pom.xml`; otherwise the repository root. Pass `workspace` to choose the root yourself.
+- **Positions**: lines and columns are one-based. Instead of a column you can pass `symbol`, the name to target on that line.
+- **Tools**: `lsp_hover`, `lsp_definition`, `lsp_type_definition`, `lsp_implementation`, `lsp_references`, `lsp_document_symbols`, `lsp_workspace_symbols` and `lsp_diagnostics`. Results list relative paths, one-based positions and a preview of the source line. `lsp_status` shows running workspaces and indexing progress.
+- **Lifecycle**: up to three workspaces run at once; the least recently used one stops when a fourth starts. `lsp_stop` frees them early, `lsp_start` warms one up ahead of time.
+
+Queries read saved files. The available features and indexing behaviour depend on the native server.
+
+Use trusted projects: a native language server can run build or project tools while indexing. To require an explicit `lsp_start` before any server runs, set `LSP_BRIDGE_AUTO_START=0` in the MCP server's environment.
 
 ## Upstream and changes
 

@@ -3,5 +3,11 @@
   "command": "sourcekit-lsp",
   "extensionToLanguage": {
     ".swift": "swift"
-  }
+  },
+  "rootMarkers": [
+    "Package.swift",
+    "*.xcodeproj",
+    "*.xcworkspace"
+  ],
+  "install": "Install a Swift toolchain that includes SourceKit-LSP and make `sourcekit-lsp` available on PATH. Select the Swift package or build workspace root."
 }

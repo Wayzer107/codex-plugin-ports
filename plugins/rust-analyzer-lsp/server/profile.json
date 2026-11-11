@@ -3,5 +3,9 @@
   "command": "rust-analyzer",
   "extensionToLanguage": {
     ".rs": "rust"
-  }
+  },
+  "rootMarkers": [
+    "Cargo.toml"
+  ],
+  "install": "Install the rust-analyzer component with `rustup component add rust-analyzer`. Select the Cargo workspace root. If an existing Rust Analyzer MCP connection already serves that workspace, use one integration to avoid indexing it twice."
 }

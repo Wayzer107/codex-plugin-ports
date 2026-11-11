@@ -1,10 +1,10 @@
 {
   "name": "clangd",
   "command": "clangd",
-  "autoInstall": true,
   "args": [
     "--background-index"
   ],
+  "autoInstall": "clangd-installer.mjs",
   "extensionToLanguage": {
     ".c": "c",
     ".h": "c",
@@ -15,5 +15,13 @@
     ".hxx": "cpp",
     ".C": "cpp",
     ".H": "cpp"
-  }
+  },
+  "rootMarkers": [
+    "compile_commands.json",
+    "compile_flags.txt",
+    ".clangd",
+    "CMakeLists.txt",
+    "meson.build"
+  ],
+  "install": "Automatic installation covers x64 Windows, macOS and Linux; elsewhere install LLVM or your distribution's clangd package."
 }
