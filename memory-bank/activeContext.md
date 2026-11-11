@@ -4,6 +4,7 @@
 Draft PR 1 (branch `claude/claude-code-marketplace`): Claude Code marketplace, MCPB bundles, session hooks with plugin installation, `CLAUDE.md`, project MCP servers, and the Claude Code port of project-lsp.
 
 ## Recent Changes
+- LSP bridge 0.2.0 (branch `claude/upbeat-bardeen-y2pjrz`): query tools auto-start the server for the file's project (outermost `rootMarkers` dir inside the Git repo, else Git root; never home or `/`), wait for initialization, run up to 3 workspaces (LRU), accept one-based positions or `symbol`, return normalized results with previews, wait for pushed diagnostics, report `$/progress` indexing, answer MCP `roots/list`, add `lsp_type_definition` and `lsp_implementation`. `LSP_BRIDGE_AUTO_START=0` restores explicit start. The clangd auto-installer from 1b8027d had been edited into the generated copy (sync `--check` failed at HEAD); it now lives in `src/installers/` with `autoInstall`/`missingHint`/`readme` profile fields. Verified with pyright end to end; the clangd download path was not run (classifier blocked it).
 - Ran the claude-md-optimizer audit: `CLAUDE.md` is 46 lines (threshold 200), no `AGENTS.md`/Copilot files, no git-crypt, nothing parses `CLAUDE.md`; no restructuring done. Optional follow-ups offered: drop hard-coded plugin counts, merge the `.mcp.json` regeneration note into the add-a-plugin checklist.
 - Added `claude-ports/project-lsp/` (Claude Code port of the Codex project-lsp): skill + plugin SessionStart hook; detects languages and enables matching `*-lsp@claude-plugins-official` in the project's `.claude/settings.json`, tracking its entries in `.claude/project-lsp.json`. Listed in `.claude-plugin/marketplace.json`; 11 tests in `tests/claude-project-lsp.test.mjs`. This repo now enables `pyright-lsp` and `typescript-lsp` at project scope.
 - Enable policy changed: repo hook and setup script install all LSP plugins but set them `false` at user scope; `claude-md-management` and `project-lsp` stay enabled; `project-lsp` is installed from this checkout's marketplace.
@@ -27,6 +28,7 @@ Await review of PR 1. Done: the setup script now sets `enableAllProjectMcpServer
 Copies in `claude-plugins/` stay unmodified. Commits end with the Co-Authored-By and Claude-Session lines. User prefers a formal tone and Dutch context for general advice.
 
 ## Learnings & Insights
+- Codex starts stdio MCP servers in the config `cwd` (our `${PLUGIN_ROOT}`), else its own working directory; its env whitelist lacks PWD and roots support is unconfirmed, so the bridge infers projects from file paths.
 - The memory-bank Stop hook compares file mtimes; after a fresh clone every file shares the checkout time, so it flags `src/` and `scripts/` files that did not change (check `git status`/`git log` before assuming work happened).
 - A project-scope `enabledPlugins: true` overrides a user-scope `false` (verified with `claude plugin list`).
 - `claude plugin marketplace add owner/repo#branch` pins a branch; the repo hook uses `marketplace add "$PWD"` instead.

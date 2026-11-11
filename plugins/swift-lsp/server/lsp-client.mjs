@@ -10,6 +10,7 @@ const maxHeaderBytes = 8 * 1024;
 const maxFrameBytes = 16 * 1024 * 1024;
 const maxPendingRequests = 128;
 const maxDiagnosticDocuments = 256;
+const maxProgressTokens = 32;
 const headerEnd = Buffer.from("\r\n\r\n");
 const pathDirectories = (process.env.PATH ?? (onWindows ? "" : "/usr/bin:/bin"))
   .split(path.delimiter)
@@ -149,19 +150,44 @@ function clientReply(method, params, settings, folders) {
   }
 }
 
+// A profile may name an installer module shipped next to this file
+// ("autoInstall": "<name>-installer.mjs"). It runs only when the configured
+// command and its fallback are missing, and resolves to an executable path.
+const installerModule = /^[a-z0-9-]+-installer\.mjs$/;
+
+async function installServer(profile, signal) {
+  // Generated packages ship the installer next to this file; src/ keeps it in installers/.
+  let location = new URL("./" + profile.autoInstall, import.meta.url);
+  if (!(await stat(location).catch(() => null))) location = new URL("./installers/" + profile.autoInstall, import.meta.url);
+  const installer = await import(location.href);
+  return installer.ensureInstalled(signal);
+}
+
 export async function startLsp(profile, root, signal) {
+  let missingError;
   try {
     return await startCandidate(profile, root, signal);
   } catch (error) {
-    if (error?.code !== "ENOENT" || !profile.fallbackCommand) throw error;
+    if (error?.code !== "ENOENT") throw error;
+    missingError = error;
   }
 
-  try {
-    return await startCandidate({ ...profile, command: profile.fallbackCommand }, root, signal);
-  } catch (error) {
-    if (error?.code !== "ENOENT") throw error;
-    throw spawnError(profile.command, "ENOENT", profile.fallbackCommand);
+  if (profile.fallbackCommand) {
+    try {
+      return await startCandidate({ ...profile, command: profile.fallbackCommand }, root, signal);
+    } catch (error) {
+      if (error?.code !== "ENOENT") throw error;
+      missingError = spawnError(profile.command, "ENOENT", profile.fallbackCommand);
+    }
   }
+
+  if (typeof profile.autoInstall === "string" && installerModule.test(profile.autoInstall)) {
+    signal?.throwIfAborted();
+    const command = await installServer(profile, signal);
+    signal?.throwIfAborted();
+    return startCandidate({ ...profile, command }, root, signal);
+  }
+  throw missingError;
 }
 
 async function startCandidate(profile, root, signal) {
@@ -181,6 +207,8 @@ async function startCandidate(profile, root, signal) {
   }
   env.PATH = pathDirectories.join(path.delimiter);
   const diagnostics = new Map();
+  const diagnosticListeners = new Set();
+  const progress = new Map();
   const pending = new Map();
   let child;
   try {
@@ -306,6 +334,28 @@ async function startCandidate(profile, root, signal) {
     });
   }
 
+  // Work-done progress (indexing, loading the workspace) lets callers explain
+  // empty or partial results while the server is still busy.
+  function trackProgress(params) {
+    const value = params?.value;
+    const token = params?.token;
+    if ((typeof token !== "string" && typeof token !== "number") || !value || typeof value !== "object") return;
+    const key = String(token);
+    if (value.kind === "end") {
+      progress.delete(key);
+      return;
+    }
+    if (value.kind !== "begin" && !progress.has(key)) return;
+    const current = progress.get(key) ?? {};
+    const text = (field) => typeof field === "string" ? field.slice(0, 200) : undefined;
+    progress.set(key, {
+      title: text(value.title) ?? current.title,
+      message: text(value.message) ?? current.message,
+      percentage: Number.isFinite(value.percentage) ? value.percentage : current.percentage,
+    });
+    if (progress.size > maxProgressTokens) progress.delete(progress.keys().next().value);
+  }
+
   const receive = consumeFrames((message) => {
     if (typeof message.method === "string") {
       if (Object.hasOwn(message, "id")) {
@@ -314,6 +364,9 @@ async function startCandidate(profile, root, signal) {
         diagnostics.delete(message.params.uri);
         diagnostics.set(message.params.uri, message.params);
         if (diagnostics.size > maxDiagnosticDocuments) diagnostics.delete(diagnostics.keys().next().value);
+        for (const listener of diagnosticListeners) listener(message.params.uri);
+      } else if (message.method === "$/progress") {
+        trackProgress(message.params);
       }
       return;
     }
@@ -377,6 +430,11 @@ async function startCandidate(profile, root, signal) {
           publishDiagnostics: { versionSupport: true },
           diagnostic: { dynamicRegistration: false, relatedDocumentSupport: false },
           documentSymbol: { hierarchicalDocumentSymbolSupport: true },
+          hover: { contentFormat: ["markdown", "plaintext"] },
+          definition: { linkSupport: true },
+          typeDefinition: { linkSupport: true },
+          implementation: { linkSupport: true },
+          references: {},
         },
         workspace: { applyEdit: false, configuration: true, workspaceFolders: true },
         window: { workDoneProgress: true },
@@ -408,6 +466,11 @@ async function startCandidate(profile, root, signal) {
   return {
     capabilities,
     diagnostics,
+    progress,
+    onDiagnostics(listener) {
+      diagnosticListeners.add(listener);
+      return () => diagnosticListeners.delete(listener);
+    },
     get alive() { return !failure && !closing && !exited; },
     request(method, params, timeoutMs) {
       if (closing) return Promise.reject(new Error("The LSP connection is closed."));

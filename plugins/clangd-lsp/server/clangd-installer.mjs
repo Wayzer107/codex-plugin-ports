@@ -489,3 +489,6 @@ export function ensureClangdInstalled(signal) {
   }
   return pendingInstall;
 }
+
+// Generic entry point used by lsp-client.mjs for profiles with "autoInstall".
+export { ensureClangdInstalled as ensureInstalled };

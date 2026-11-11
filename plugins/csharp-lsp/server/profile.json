@@ -3,5 +3,11 @@
   "command": "csharp-ls",
   "extensionToLanguage": {
     ".cs": "csharp"
-  }
+  },
+  "rootMarkers": [
+    "*.sln",
+    "*.slnx",
+    "*.csproj"
+  ],
+  "install": "Install the supported .NET SDK and run `dotnet tool install --global csharp-ls`. Open the directory containing the solution or project."
 }

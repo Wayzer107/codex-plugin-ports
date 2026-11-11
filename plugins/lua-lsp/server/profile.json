@@ -3,5 +3,10 @@
   "command": "lua-language-server",
   "extensionToLanguage": {
     ".lua": "lua"
-  }
+  },
+  "rootMarkers": [
+    ".luarc.json",
+    ".luarc.jsonc"
+  ],
+  "install": "Install Lua Language Server and make `lua-language-server` available on PATH. Keep its runtime files alongside the distribution."
 }

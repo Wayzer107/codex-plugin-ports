@@ -3,7 +3,7 @@
 ## What Works
 - Codex marketplace with 16 plugins (loads in Codex 0.167.1).
 - Claude Code marketplace with 13 verbatim plugins (`diff -r` clean, `claude plugin validate .` passes).
-- 12 MCPB bundles; two smoke-tested over stdio (handshake, 9 tools, `lsp_status`).
+- 12 MCPB bundles; two smoke-tested over stdio at 0.1.0 (handshake, 9 tools, `lsp_status`); bridge 0.2.0 has 11 tools.
 - SessionStart hook: toolchain check, plugin install and enable in cloud sessions, re-enable on every start; tested in throwaway `HOME`s and a repo copy. Codex discovers its project hook when trusted.
 - Environment setup script (project-lsp policy saved: LSP plugins installed but `false` at user scope, `claude-md-management` and `project-lsp` enabled) installs the plugins and approves project MCP servers via user settings (tested in a fresh `HOME`: all 12 `.mcp.json` servers connected; not yet in a real fresh container).
 - `.mcp.json` LSP bridges connect when approved (verified with `claude mcp list` in a trusted copy and with the flag in user settings).

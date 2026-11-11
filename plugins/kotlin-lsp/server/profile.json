@@ -4,10 +4,18 @@
   "args": [
     "--stdio"
   ],
+  "startupTimeout": 120000,
+  "fallbackCommand": "intellij-server",
   "extensionToLanguage": {
     ".kt": "kotlin",
     ".kts": "kotlin"
   },
-  "startupTimeout": 120000,
-  "fallbackCommand": "intellij-server"
+  "rootMarkers": [
+    "settings.gradle.kts",
+    "settings.gradle",
+    "build.gradle.kts",
+    "build.gradle",
+    "pom.xml"
+  ],
+  "install": "Install the official standalone Kotlin LSP. Check the release notes for its bundled or required runtime. Put `kotlin-lsp` or the newer `intellij-server` executable on PATH. The bridge passes `--stdio`."
 }

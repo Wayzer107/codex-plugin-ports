@@ -80,7 +80,7 @@ Start a new Codex conversation in your project and ask it to use the installed l
 
 ## MCPB bundles
 
-Each language server plugin is also built as a standalone [MCPB](https://github.com/anthropics/mcpb) bundle in [`dist/mcpb/`](dist/mcpb), for hosts such as Claude Desktop that install a single `.mcpb` file. A bundle contains the same bridge as the Codex plugin and has no dependencies beyond Node.js 22 or newer and the native language server on PATH. It asks for no install-time settings: call `lsp_start` with the absolute project root, as described in the plugin's README.
+Each language server plugin is also built as a standalone [MCPB](https://github.com/anthropics/mcpb) bundle in [`dist/mcpb/`](dist/mcpb), for hosts such as Claude Desktop that install a single `.mcpb` file. A bundle contains the same bridge as the Codex plugin and has no dependencies beyond Node.js 22 or newer and the native language server on PATH. It asks for no install-time settings: query tools start the language server for the file's project automatically, as described in the plugin's README.
 
 Rebuild all bundles after changing the bridge or profiles (the build needs network access to fetch the MCPB CLI):
 

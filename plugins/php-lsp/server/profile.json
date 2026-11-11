@@ -6,5 +6,9 @@
   ],
   "extensionToLanguage": {
     ".php": "php"
-  }
+  },
+  "rootMarkers": [
+    "composer.json"
+  ],
+  "install": "Run `npm install -g intelephense` and make the npm bin directory available on PATH."
 }

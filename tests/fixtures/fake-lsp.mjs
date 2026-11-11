@@ -34,13 +34,16 @@ function reply(id, result, { split = false } = {}) {
   });
 }
 
+function notify(method, params) {
+  output = output.then(() => process.stdout.write(frame({ method, params })));
+}
+
 function publish(uri, version, text) {
-  if (mode !== 'push') return;
+  if (mode !== 'push' && mode !== 'push-delayed') return;
   const diagnostics = text.includes('clean') ? [] : [diagnostic];
-  output = output.then(() => process.stdout.write(frame({
-    method: 'textDocument/publishDiagnostics',
-    params: { uri, version, diagnostics },
-  })));
+  const send = () => notify('textDocument/publishDiagnostics', { uri, version, diagnostics });
+  if (mode === 'push-delayed') setTimeout(send, 300);
+  else send();
 }
 
 function handle({ method, id, params }) {
@@ -52,6 +55,8 @@ function handle({ method, id, params }) {
       hoverProvider: mode !== 'limited',
       definitionProvider: true,
       referencesProvider: true,
+      typeDefinitionProvider: true,
+      implementationProvider: true,
       documentSymbolProvider: true,
       workspaceSymbolProvider: true,
     };
@@ -63,6 +68,10 @@ function handle({ method, id, params }) {
   }
   if (method === 'initialized') {
     initialized = true;
+    if (mode === 'indexing') {
+      notify('$/progress', { token: 'index', value: { kind: 'begin', title: 'Indexing', percentage: 0 } });
+      notify('$/progress', { token: 'index', value: { kind: 'report', message: '3/10 files', percentage: 30 } });
+    }
     return;
   }
   assert.equal(initialized, true, 'LSP request arrived before initialized');
@@ -114,6 +123,14 @@ function handle({ method, id, params }) {
     case 'textDocument/definition':
       assert.ok(documents.has(params.textDocument.uri));
       reply(id, { uri: params.textDocument.uri, range });
+      break;
+    case 'textDocument/typeDefinition':
+      assert.ok(documents.has(params.textDocument.uri));
+      reply(id, [{ targetUri: params.textDocument.uri, targetRange: range, targetSelectionRange: range, originSelectionRange: range }]);
+      break;
+    case 'textDocument/implementation':
+      assert.ok(documents.has(params.textDocument.uri));
+      reply(id, null);
       break;
     case 'textDocument/references':
       assert.ok(documents.has(params.textDocument.uri));

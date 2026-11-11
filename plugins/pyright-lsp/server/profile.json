@@ -7,5 +7,13 @@
   "extensionToLanguage": {
     ".py": "python",
     ".pyi": "python"
-  }
+  },
+  "rootMarkers": [
+    "pyrightconfig.json",
+    "pyproject.toml",
+    "setup.py",
+    "setup.cfg",
+    "Pipfile"
+  ],
+  "install": "Run `npm install -g pyright` and make `pyright-langserver` available on PATH. Keep project interpreter and type-checker settings in the project's normal configuration."
 }

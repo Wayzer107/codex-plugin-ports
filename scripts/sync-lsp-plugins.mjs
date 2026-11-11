@@ -32,7 +32,7 @@ function json(data) {
 }
 
 for (const profile of profiles) {
-  const { plugin, displayName, language, install, documentation, server } = profile;
+  const { plugin, displayName, language, install, missingHint, documentation, server, readme = [] } = profile;
   const directory = "plugins/" + plugin;
   const description = "Use " + server.command + " for " + language + " code navigation and diagnostics in Codex.";
   const shortDescription = language + " code intelligence";
@@ -41,7 +41,7 @@ for (const profile of profiles) {
   await output(directory + "/plugin.json", json({
     $schema: "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
     name: plugin,
-    version: "0.1.0",
+    version: "0.2.0",
     description,
     author: { name: "Codex Plugin Ports" },
     repository: packageRoot,
@@ -66,7 +66,10 @@ for (const profile of profiles) {
       },
     },
   }));
-  await output(directory + "/server/profile.json", json(server));
+  await output(directory + "/server/profile.json", json({ ...server, install: missingHint ?? install }));
+  if (server.autoInstall) {
+    await output(directory + "/server/" + server.autoInstall, await readFile(join(root, "src/installers", server.autoInstall)));
+  }
   await output(directory + "/server/bridge.mjs", bridge);
   await output(directory + "/server/lsp-client.mjs", transport);
   await output(directory + "/LICENSE", license);
@@ -80,6 +83,7 @@ for (const profile of profiles) {
     "- Node.js 22 or newer on the Codex host's PATH.",
     "- " + install + " [Language-server documentation](" + documentation + ")",
     "",
+    ...(readme.length ? [...readme, ""] : []),
     "## Use in Codex",
     "",
     "After adding the marketplace, install this plugin and start a new Codex conversation.",
@@ -88,9 +92,16 @@ for (const profile of profiles) {
     "codex plugin add '" + plugin + "@codex-plugin-ports'",
     "~~~",
     "",
-    "Ask Codex to use the " + server.name + " language-server tools for your project. Call `lsp_start` with the absolute project root and poll `lsp_status` if initialization is pending. Queries use saved files and zero-based UTF-16 positions. The available features and indexing behavior depend on the native server.",
+    "Ask Codex to use the " + server.name + " language-server tools for your project. Every query tool takes a `file` (an absolute path works best) and starts " + server.command + " for that file's project on first use, then waits for it to initialize. There is no separate start step.",
     "",
-    "Open trusted workspaces. A native language server can run build or project tools while indexing. Stop the workspace with `lsp_stop` when you finish or before starting another workspace.",
+    "- **Project root**: the outermost directory inside the file's Git repository that contains " + server.rootMarkers.map((marker) => "`" + marker + "`").join(", ") + "; otherwise the repository root. Pass `workspace` to choose the root yourself.",
+    "- **Positions**: lines and columns are one-based. Instead of a column you can pass `symbol`, the name to target on that line.",
+    "- **Tools**: `lsp_hover`, `lsp_definition`, `lsp_type_definition`, `lsp_implementation`, `lsp_references`, `lsp_document_symbols`, `lsp_workspace_symbols` and `lsp_diagnostics`. Results list relative paths, one-based positions and a preview of the source line. `lsp_status` shows running workspaces and indexing progress.",
+    "- **Lifecycle**: up to three workspaces run at once; the least recently used one stops when a fourth starts. `lsp_stop` frees them early, `lsp_start` warms one up ahead of time.",
+    "",
+    "Queries read saved files. The available features and indexing behaviour depend on the native server.",
+    "",
+    "Use trusted projects: a native language server can run build or project tools while indexing. To require an explicit `lsp_start` before any server runs, set `LSP_BRIDGE_AUTO_START=0` in the MCP server's environment.",
     "",
     "## Upstream and changes",
     "",
