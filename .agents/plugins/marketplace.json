@@ -53,6 +53,18 @@
       "category": "Developer Tools"
     },
     {
+      "name": "memory-bank",
+      "source": {
+        "source": "local",
+        "path": "./plugins/memory-bank"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "clangd-lsp",
       "source": {
         "source": "local",

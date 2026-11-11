@@ -1,0 +1,21 @@
+{
+  "name": "memory-bank",
+  "version": "0.1.0",
+  "description": "Initialize and maintain a local Markdown memory bank that preserves project context across Codex sessions.",
+  "author": {
+    "name": "Codex Plugin Ports"
+  },
+  "repository": "https://github.com/Wayzer107/codex-plugin-ports",
+  "license": "Apache-2.0",
+  "skills": "./skills",
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "Memory Bank",
+    "shortDescription": "Maintain project context",
+    "longDescription": "Initialize, read, and maintain a project's Markdown memory bank. A Codex Stop hook reminds you when project files are newer than the latest memory bank update.",
+    "developerName": "Codex Plugin Ports",
+    "category": "Developer Tools",
+    "capabilities": [],
+    "defaultPrompt": "Initialize or update this project's memory bank."
+  }
+}
