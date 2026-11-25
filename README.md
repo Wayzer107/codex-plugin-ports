@@ -1,6 +1,6 @@
 # Codex Plugin Ports
 
-Codex plugins adapted from Anthropic's Claude plugins. Each plugin is independently installable.
+Codex plugins including ports of Anthropic's Claude plugins. Each plugin is independently installable.
 
 | Plugin | Use it for |
 | --- | --- |
@@ -9,6 +9,8 @@ Codex plugins adapted from Anthropic's Claude plugins. Each plugin is independen
 | [Memory Bank](plugins/memory-bank/README.md) | Preserving project context across Codex sessions |
 | [Project LSP](plugins/project-lsp/README.md) | Detecting source languages and enabling the matching LSP plugins in a Git project |
 | [Hookify](plugins/hookify/README.md) | Writing local Markdown rules for Codex hooks |
+| [Ultrapowers Dev](plugins/ultrapowers-dev/README.md) | Software-development skills for languages, frameworks, architecture, testing, security, and agent workflows |
+| [OpenAI Docs](plugins/openai-docs/README.md) | Searching official OpenAI developer docs and researching Codex, model selection, and migration |
 
 ## Claude Code marketplace
 
@@ -103,4 +105,4 @@ node --test
 
 The original plugins are in [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official/tree/0412be76f50ab4f4f8abff3753efa9269fbbca5b/plugins) at commit `0412be76f50ab4f4f8abff3753efa9269fbbca5b`. Isabella He is credited as the author of both upstream plugins. Each port describes its changes in its README.
 
-The marketplace is distributed under the [Apache License 2.0](LICENSE). Each plugin also includes a copy of the license.
+The marketplace is distributed under the [Apache License 2.0](LICENSE). Each plugin includes its own license. [Ultrapowers Dev is distributed under the MIT License](plugins/ultrapowers-dev/LICENSE).

@@ -1,9 +1,12 @@
 # Active Context
 
 ## Current Focus
-Draft PR 1 (branch `claude/claude-code-marketplace`): Claude Code marketplace, MCPB bundles, session hooks with plugin installation, `CLAUDE.md`, project MCP servers, and the Claude Code port of project-lsp.
+OpenAI Docs and Ultrapowers Dev are listed in the Codex marketplace.
 
 ## Recent Changes
+- Updated `AGENTS.md` to require committing, pushing, and merging each new plugin addition into `main`.
+- Added `openai-docs@codex-plugin-ports` at `0.1.0` with the curated OpenAI Docs skill and the public Developer Docs MCP server. The package uses the bundled connection and supports HTTP proxies in the model metadata helper.
+- Added `ultrapowers-dev@codex-plugin-ports` at `1.2.0+codex.2`. Scoped browser authentication to a dedicated session, limited fetched design guidelines to review criteria, and updated the installation instructions for this marketplace. Codex installed the plugin and discovered all 55 skills in an isolated profile.
 - Ran the claude-md-optimizer audit: `CLAUDE.md` is 46 lines (threshold 200), no `AGENTS.md`/Copilot files, no git-crypt, nothing parses `CLAUDE.md`; no restructuring done. Optional follow-ups offered: drop hard-coded plugin counts, merge the `.mcp.json` regeneration note into the add-a-plugin checklist.
 - Added `claude-ports/project-lsp/` (Claude Code port of the Codex project-lsp): skill + plugin SessionStart hook; detects languages and enables matching `*-lsp@claude-plugins-official` in the project's `.claude/settings.json`, tracking its entries in `.claude/project-lsp.json`. Listed in `.claude-plugin/marketplace.json`; 11 tests in `tests/claude-project-lsp.test.mjs`. This repo now enables `pyright-lsp` and `typescript-lsp` at project scope.
 - Enable policy changed: repo hook and setup script install all LSP plugins but set them `false` at user scope; `claude-md-management` and `project-lsp` stay enabled; `project-lsp` is installed from this checkout's marketplace.
@@ -15,7 +18,7 @@ Draft PR 1 (branch `claude/claude-code-marketplace`): Claude Code marketplace, M
 - `.claude/settings.json` enables `claude-md-management@claude-plugins-official`.
 
 ## Next Steps
-Await review of PR 1. Done: the setup script now sets `enableAllProjectMcpServers`. Optional: optionally trim `.mcp.json` to used languages. Optional: README note on Codex trust steps; a staleness check for `dist/mcpb/`.
+The setup script sets `enableAllProjectMcpServers`. Optional follow-ups include trimming `.mcp.json` to used languages, documenting Codex trust steps, and adding a staleness check for `dist/mcpb/`.
 
 ## Active Decisions & Considerations
 - project-lsp's hook auto-writes committed `.claude/settings.json` in any Git repo (agreed); it writes at the Git root, which is unverified when Claude Code is started in a subdirectory.
