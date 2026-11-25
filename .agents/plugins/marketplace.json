@@ -65,6 +65,30 @@
       "category": "Developer Tools"
     },
     {
+      "name": "ultrapowers-dev",
+      "source": {
+        "source": "local",
+        "path": "./plugins/ultrapowers-dev"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "openai-docs",
+      "source": {
+        "source": "local",
+        "path": "./plugins/openai-docs"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "clangd-lsp",
       "source": {
         "source": "local",

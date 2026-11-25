@@ -1,7 +1,7 @@
 # System Patterns
 
 ## Architecture Overview
-- `plugins/<name>/` holds 16 Codex plugins. `.agents/plugins/marketplace.json` lists them.
+- `plugins/<name>/` holds the Codex plugins listed in `.agents/plugins/marketplace.json`, including the skills-only Ultrapowers Dev package.
 - `claude-plugins/<name>/` holds 13 verbatim upstream plugins. `.claude-plugin/marketplace.json` lists them (entries copied from upstream, only `source` changed).
 - `src/` holds the shared LSP bridge (`bridge.mjs`, `lsp-client.mjs`, `lsp-profiles.json`). `scripts/sync-lsp-plugins.mjs` generates the 12 `*-lsp` Codex packages from it (`--check` detects drift).
 

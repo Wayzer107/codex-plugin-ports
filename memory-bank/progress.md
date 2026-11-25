@@ -1,7 +1,7 @@
 # Progress
 
 ## What Works
-- Codex marketplace with 16 plugins (loads in Codex 0.167.1).
+- Codex marketplace with 19 plugins. Codex 0.167.0-alpha.4 installed OpenAI Docs and Ultrapowers Dev in isolated profiles. The OpenAI Docs helpers fetched the Codex manual and current model metadata, and Codex discovered all 55 Ultrapowers Dev skills.
 - Claude Code marketplace with 13 verbatim plugins (`diff -r` clean, `claude plugin validate .` passes).
 - 12 MCPB bundles; two smoke-tested over stdio (handshake, 9 tools, `lsp_status`).
 - SessionStart hook: toolchain check, plugin install and enable in cloud sessions, re-enable on every start; tested in throwaway `HOME`s and a repo copy. Codex discovers its project hook when trusted.
@@ -11,15 +11,15 @@
 - `CLAUDE.md` in place and audited (46 lines, within the 200-line guideline; no extraction needed); all tests (32 Node, Hookify) and the sync check pass.
 
 ## What's Left to Build
-- Review and merge draft PR 1.
 - Confirm the setup script and hook in a real fresh cloud session.
 - Run the Codex hook end-to-end in a logged-in Codex session.
 - Optional: replace hard-coded plugin counts in `CLAUDE.md`; README trust notes; detect stale `dist/mcpb/` bundles; sign bundles.
 
 ## Current Status
-Branch `claude/claude-code-marketplace` pushed, about 10 commits ahead of `main`; draft PR 1 open.
+The `work` branch includes the OpenAI Docs and Ultrapowers Dev marketplace additions and the new-plugin push instruction in `AGENTS.md`.
 
 ## Known Issues
+- The LSP sync check reports drift in four `clangd-lsp` files on both the current checkout and committed baseline `64e140f`.
 - Copied READMEs lack a marketplace install line (validator warning, intentional).
 - Windows Codex hook checks only the Node version.
 - First session in a new container takes about 15 to 20 seconds longer (plugin installs).

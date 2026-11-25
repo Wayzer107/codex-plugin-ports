@@ -1,0 +1,41 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ultrapowers-dev",
+  "version": "1.2.0+codex.2",
+  "description": "55 reusable software-development skills covering language practices, frameworks, architecture, testing, security, and agent workflows.",
+  "author": {
+    "name": "Ennio Maldonado",
+    "url": "https://www.enniomaldonado.com"
+  },
+  "homepage": "https://datatide.io/ultrapowers",
+  "repository": "https://github.com/ennio-datatide/ultrapowers-dev",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "development",
+    "software",
+    "architecture",
+    "testing",
+    "best-practices",
+    "frameworks",
+    "agent-workflows"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Ultrapowers Dev for Codex",
+        "shortDescription": "Development skills for Codex",
+        "longDescription": "Adds 55 reusable software-development skills for Codex, covering language practices, framework patterns, architecture, testing, security, and agent workflows. Companion package to Ultrapowers.",
+        "developerName": "Ennio Maldonado",
+        "category": "Developer Tools",
+        "capabilities": [],
+        "defaultPrompt": "Use the most relevant Ultrapowers Dev skill for my software-development task.",
+        "logo": "assets/logo.png",
+        "composerIcon": "assets/logo-sm.png",
+        "logoDark": "assets/logo-dark.png",
+        "composerIconDark": "assets/logo-dark.png",
+        "brandColor": "#6D28D9"
+      }
+    }
+  }
+}

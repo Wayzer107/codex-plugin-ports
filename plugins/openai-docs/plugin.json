@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "openai-docs",
+  "version": "0.1.0",
+  "description": "Look up official OpenAI developer documentation, answer Codex questions, and research model selection and migration.",
+  "repository": "https://github.com/Wayzer107/codex-plugin-ports",
+  "license": "Apache-2.0",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "OpenAI Docs",
+        "shortDescription": "Official OpenAI docs lookup",
+        "longDescription": "Search and cite official OpenAI developer documentation. Includes the curated OpenAI Docs skill for API reference, Codex questions, model selection, and migration guidance.",
+        "category": "Developer Tools",
+        "defaultPrompt": "Find the current OpenAI guide for migrating from Chat Completions to the Responses API.",
+        "logo": "skills/openai-docs/assets/openai.png",
+        "composerIcon": "skills/openai-docs/assets/openai.png"
+      }
+    }
+  }
+}
