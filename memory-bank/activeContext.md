@@ -4,7 +4,7 @@
 OpenAI Docs and Ultrapowers Dev are listed in the Codex marketplace.
 
 ## Recent Changes
-- Added `AGENTS.md` with the requirement to commit and push every new plugin addition.
+- Updated `AGENTS.md` to require committing, pushing, and merging each new plugin addition into `main`.
 - Added `openai-docs@codex-plugin-ports` at `0.1.0` with the curated OpenAI Docs skill and the public Developer Docs MCP server. The package uses the bundled connection and supports HTTP proxies in the model metadata helper.
 - Added `ultrapowers-dev@codex-plugin-ports` at `1.2.0+codex.2`. Scoped browser authentication to a dedicated session, limited fetched design guidelines to review criteria, and updated the installation instructions for this marketplace. Codex installed the plugin and discovered all 55 skills in an isolated profile.
 - Ran the claude-md-optimizer audit: `CLAUDE.md` is 46 lines (threshold 200), no `AGENTS.md`/Copilot files, no git-crypt, nothing parses `CLAUDE.md`; no restructuring done. Optional follow-ups offered: drop hard-coded plugin counts, merge the `.mcp.json` regeneration note into the add-a-plugin checklist.

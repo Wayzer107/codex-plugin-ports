@@ -16,7 +16,7 @@
 - Optional: replace hard-coded plugin counts in `CLAUDE.md`; README trust notes; detect stale `dist/mcpb/` bundles; sign bundles.
 
 ## Current Status
-The `work` branch includes the OpenAI Docs and Ultrapowers Dev marketplace additions and the new-plugin push instruction in `AGENTS.md`.
+OpenAI Docs and Ultrapowers Dev are in the Codex catalog. The new-plugin workflow in `AGENTS.md` requires merging into `main` after pushing.
 
 ## Known Issues
 - The LSP sync check reports drift in four `clangd-lsp` files on both the current checkout and committed baseline `64e140f`.
